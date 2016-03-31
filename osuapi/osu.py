@@ -57,12 +57,13 @@ class OsuApi:
             m=mode
             ), JsonList(User))
 
-    def get_user_best(self, username, *, mode=OsuMode.osu):
+    def get_user_best(self, username, *, mode=OsuMode.osu, limit=50):
         return self._make_req(endpoints.USER_BEST, dict(
             k=self.key,
             u=username,
             type=self._username_type(username),
-            m=mode
+            m=mode,
+            limit=limit
             ), JsonList(Score))
 
     def get_scores(self, beatmap_id, *, username=None, mode=OsuMode.osu, mods=None, limit=50):
