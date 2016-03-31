@@ -1,0 +1,1 @@
+osssss is a wrapper for the osu api written in python
