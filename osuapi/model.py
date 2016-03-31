@@ -10,6 +10,23 @@ def JsonList(oftype):
     return _
 
 
+def Nullable(oftype):
+    class _:
+        def __new__(cls, it):
+            if it is None:
+                return None
+            else:
+                return oftype(it)
+    return _
+
+
+def PreProcessInt(oftype):
+    class _:
+        def __new__(cls, it):
+            return oftype(int(it))
+    return _
+
+
 class JsonDateTime:
     def __new__(cls, val):
         return datetime.datetime.strptime(val, "%Y-%m-%d %H:%M:%S")
@@ -112,30 +129,33 @@ class BeatmapLanguage(Enum):
 
 
 class Beatmap(JsonObjWrapper):
-    approved = BeatmapStatus
-    approved_date = JsonDateTime
+    approved = PreProcessInt(BeatmapStatus)
+    approved_date = Nullable(JsonDateTime)
     last_update = JsonDateTime
     artist = str
     beatmap_id = int
     beatmapset_id = int
-    bpm = int
+    bpm = float
     creator = str
     difficultyrating = float
-    diff_size = int
-    diff_overall = int
-    diff_approach = int
-    diff_drain = int
+    diff_size = float
+    diff_overall = float
+    diff_approach = float
+    diff_drain = float
     hit_length = int
     source = str
-    genre_id = BeatmapGenre
-    language_id = BeatmapLanguage
+    genre_id = PreProcessInt(BeatmapGenre)
+    language_id = PreProcessInt(BeatmapLanguage)
     title = str
     total_length = int
     version = str
     file_md5 = str
-    mode = OsuMode
+    mode = PreProcessInt(OsuMode)
     tags = str
     favourite_count = int
     playcount = int
     passcount = int
-    max_combo = int
+    max_combo = Nullable(int)
+
+    def __str__(self):
+        return "<{}.Beatmap title={} creator={}>".format(self.__module__, self.title, self.creator)

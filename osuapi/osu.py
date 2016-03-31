@@ -2,7 +2,7 @@ try:
     import asyncio
 except ImportError:
     pass
-from .model import User, Score, JsonList, OsuMode
+from .model import User, Score, JsonList, OsuMode, Beatmap
 from . import endpoints
 
 
@@ -45,6 +45,8 @@ class OsuApi:
 
     @staticmethod
     def _username_type(username):
+        if username is None:
+            return None
         return "int" if isinstance(username, int) else "string"
 
     def get_user(self, username, *, mode=OsuMode.osu):
@@ -72,3 +74,17 @@ class OsuApi:
             m=mode,
             mods=mods,
             limit=limit), JsonList(Score))
+
+    def get_beatmaps(self, *, since=None, beatmapset_id=None, beatmap_id=None, username=None, mode=OsuMode.osu,
+                     include_converted=False, beatmap_hash=None, limit=500):
+        return self._make_req(endpoints.BEATMAPS, dict(
+            k=self.key,
+            s=beatmapset_id,
+            b=beatmap_id,
+            u=username,
+            type=self._username_type(username),
+            m=mode,
+            a=include_converted,
+            h=beatmap_hash,
+            limit=limit
+            ), JsonList(Beatmap))
