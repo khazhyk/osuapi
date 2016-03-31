@@ -14,6 +14,7 @@ setup(
     license="MIT",
     keywords="osu",
     packages=find_packages(),
+    description="osu! api wrapper.",
     long_description=read('README.md'),
     classifiers=[
       "Development Status :: 1 - Planning",
