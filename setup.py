@@ -10,6 +10,7 @@ setup(
     name=name,
     version=version,
     author=author,
+    url="https://github.com/khazhyk/osssss",
     license="MIT",
     keywords="osu",
     packages=find_packages(),
