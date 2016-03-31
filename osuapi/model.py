@@ -1,5 +1,6 @@
 import warnings
 import datetime
+from enum import Enum
 
 
 def JsonList(oftype):
@@ -21,6 +22,13 @@ class JsonObjWrapper:
                 setattr(self, k, getattr(self, k)(v))
             except AttributeError:
                 warnings.warn("Unknown attribute in API response: {}".format(k), Warning)
+
+
+class OsuMode(Enum):
+    osu = 0
+    taiko = 1
+    mania = 2
+    ctb = 3
 
 
 class Score(JsonObjWrapper):
@@ -64,3 +72,70 @@ class User(JsonObjWrapper):
     @property
     def total_hits(self):
         return self.count300 + self.count100 + self.count50
+
+
+class BeatmapStatus(Enum):
+    graveyard = -2
+    wip = -1
+    pending = 0
+    ranked = 1
+    approved = 2
+    qualified = 3
+
+
+class BeatmapGenre(Enum):
+    any = 0
+    unspecified = 1
+    video_game = 2
+    anime = 3
+    rock = 4
+    pop = 5
+    other = 6
+    novelty = 7
+    hip_hop = 9
+    electronic = 10
+
+
+class BeatmapLanguage(Enum):
+    any = 0
+    other = 1
+    english = 2
+    japanese = 3
+    chinese = 4
+    instrumental = 5
+    korean = 6
+    french = 7
+    german = 8
+    swedish = 9
+    spanish = 10
+    italian = 11
+
+
+class Beatmap(JsonObjWrapper):
+    approved = BeatmapStatus
+    approved_date = JsonDateTime
+    last_update = JsonDateTime
+    artist = str
+    beatmap_id = int
+    beatmapset_id = int
+    bpm = int
+    creator = str
+    difficultyrating = float
+    diff_size = int
+    diff_overall = int
+    diff_approach = int
+    diff_drain = int
+    hit_length = int
+    source = str
+    genre_id = BeatmapGenre
+    language_id = BeatmapLanguage
+    title = str
+    total_length = int
+    version = str
+    file_md5 = str
+    mode = OsuMode
+    tags = str
+    favourite_count = int
+    playcount = int
+    passcount = int
+    max_combo = int
