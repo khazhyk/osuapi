@@ -4,7 +4,7 @@ try:
     import asyncio
 except ImportError:
     pass
-from .model import User, Score, JsonList, OsuMode, Beatmap
+from .model import User, Score, JsonList, OsuMode, Beatmap, Match
 from . import endpoints
 
 
@@ -136,3 +136,11 @@ class OsuApi:
             h=beatmap_hash,
             limit=limit
             ), JsonList(Beatmap))
+
+    def get_match(self, match_id):
+        """get a multiplayer match.
+
+        :match_id the id of the match to retrieve"""
+        return self._make_req(endpoints.MATCH, dict(
+            k=self.key,
+            mp=match_id), Match)

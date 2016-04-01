@@ -53,7 +53,10 @@ class JsonObjWrapper:
             try:
                 setattr(self, k, getattr(self, k)(v))
             except AttributeError:
-                warnings.warn("Unknown attribute in API response: {}".format(k), Warning)
+                warnings.warn("Unknown attribute {} in API response for type {}".format(k, type(self)), Warning)
+            except:
+                warnings.warn("Error processing {} value {}".format(k, v), Warning)
+                raise
 
 
 class OsuMode(Enum):
@@ -83,6 +86,10 @@ class Score(JsonObjWrapper):
     def __repr__(self):
         return "<{0.__module__}.Score user_id={0.user_id} beatmap_id={0.beatmap_id} date={0.date}>".format(self)
 
+class TeamScore(Score):
+    slot = int
+    team = int
+setattr(TeamScore, "pass", bool) # hack
 
 class User(JsonObjWrapper):
     user_id = int
@@ -183,3 +190,30 @@ class Beatmap(JsonObjWrapper):
 
     def __repr__(self):
         return "<{0.__module__}.Beatmap title={0.title} creator={0.creator} id={0.beatmap_id}>".format(self)
+
+class MatchMetadata(JsonObjWrapper):
+    match_id = int
+    name = str
+    start_time = DateConverter
+    end_time = Nullable(DateConverter)
+
+    def __repr__(self):
+        return "<{0.__module__}.MatchMetadata id={0.match_id} name={0.name} start_time={0.start_time}>".format(self)
+
+class Game(JsonObjWrapper):
+    game_id = int
+    start_time = DateConverter
+    end_time = DateConverter
+    beatmap_id = int
+    play_mode = PreProcessInt(OsuMode)
+    match_type = str # not sure what this is?
+    scoring_type = int # TODO: Make enumerate
+    team_type = int # TODO: Make enumerate
+    mods = int # TODO: Make mods type
+    scores = JsonList(TeamScore)
+
+class Match(JsonObjWrapper):
+    match = MatchMetadata
+    games = JsonList(Game)
+
+
