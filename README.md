@@ -1,6 +1,8 @@
 osssss
 ======
 
+Welcome to osssss!
+
 osssss a wrapper for the osu! api.
 
 It's "agnositic" of the requesting backend, insofar as it provides a method "get" that takes a url and a params dict.

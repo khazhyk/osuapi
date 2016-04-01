@@ -65,13 +65,28 @@ class OsuApi:
             ), JsonList(User))
 
     def get_user_best(self, username, *, mode=OsuMode.osu, limit=50):
-        """get a users's best scores.
+        """get a user's best scores.
 
         :username as in get_user
         :mode as in get_user
         :limit defaults to 50, number of results to return
         """
         return self._make_req(endpoints.USER_BEST, dict(
+            k=self.key,
+            u=username,
+            type=self._username_type(username),
+            m=mode,
+            limit=limit
+            ), JsonList(Score))
+
+    def get_user_recent(self, username, *, mode=OsuMode.osu, limit=10):
+        """get a user's most recent scores.
+
+        :username as in get_user
+        :mode as in get_user
+        :limit defaults to 10, max 50
+        """
+        return self._make_req(endpoints.USER_RECENT, dict(
             k=self.key,
             u=username,
             type=self._username_type(username),
