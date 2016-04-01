@@ -1,9 +1,14 @@
+"""Different classes to parse dicts/lists returned from json into meaningful data objects."""
+
 import warnings
 import datetime
 from enum import Enum
 
 
 def JsonList(oftype):
+    """Generate a converter that accepts a list of :oftype.
+
+    field = JsonList(int) would expect to be passed a list of things to convert to int"""
     class _:
         def __new__(cls, lis):
             return [oftype(entry) for entry in lis]
@@ -11,6 +16,9 @@ def JsonList(oftype):
 
 
 def Nullable(oftype):
+    """Generate a converter that may be None, or :oftype.
+
+    field = Nullable(DateConverter) would expect either null or something to convert to date"""
     class _:
         def __new__(cls, it):
             if it is None:
@@ -21,18 +29,25 @@ def Nullable(oftype):
 
 
 def PreProcessInt(oftype):
+    """Generate a converter that first converts the input to int before passing to :oftype.
+
+    field = PreProcessInt(MyEnum) if field is a string in the json response to be interpteded as int"""
     class _:
         def __new__(cls, it):
             return oftype(int(it))
     return _
 
 
-class JsonDateTime:
+class DateConverter:
+    """Converter to convert osu! api's date type into datetime."""
+
     def __new__(cls, val):
         return datetime.datetime.strptime(val, "%Y-%m-%d %H:%M:%S")
 
 
 class JsonObjWrapper:
+    """Base class for data objects parsed from json objects."""
+
     def __init__(self, dic):
         for k, v in dic.items():
             try:
@@ -61,9 +76,12 @@ class Score(JsonObjWrapper):
     perfect = bool
     enabled_mods = int
     user_id = int
-    date = JsonDateTime
+    date = DateConverter
     rank = str
     pp = float
+
+    def __repr__(self):
+        return "<{0.__module__}.Score user_id={0.user_id} beatmap_id={0.beatmap_id} date={0.date}>".format(self)
 
 
 class User(JsonObjWrapper):
@@ -89,6 +107,12 @@ class User(JsonObjWrapper):
     @property
     def total_hits(self):
         return self.count300 + self.count100 + self.count50
+
+    def __repr__(self):
+        return "<{0.__module__}.User username={0.username} user_id={0.user_id}>".format(self)
+
+    def __str__(self):
+        return username
 
 
 class BeatmapStatus(Enum):
@@ -130,8 +154,8 @@ class BeatmapLanguage(Enum):
 
 class Beatmap(JsonObjWrapper):
     approved = PreProcessInt(BeatmapStatus)
-    approved_date = Nullable(JsonDateTime)
-    last_update = JsonDateTime
+    approved_date = Nullable(DateConverter)
+    last_update = DateConverter
     artist = str
     beatmap_id = int
     beatmapset_id = int
@@ -157,5 +181,5 @@ class Beatmap(JsonObjWrapper):
     passcount = int
     max_combo = Nullable(int)
 
-    def __str__(self):
-        return "<{}.Beatmap title={} creator={}>".format(self.__module__, self.title, self.creator)
+    def __repr__(self):
+        return "<{0.__module__}.Beatmap title={0.title} creator={0.creator} id={0.beatmap_id}>".format(self)
