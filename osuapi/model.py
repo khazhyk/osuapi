@@ -51,7 +51,10 @@ class JsonObjWrapper:
     def __init__(self, dic):
         for k, v in dic.items():
             try:
-                setattr(self, k, getattr(self, k)(v))
+                if v is None:
+                    setattr(self, k, getattr(self, k)())
+                else:
+                    setattr(self, k, getattr(self, k)(v))
             except AttributeError:
                 warnings.warn("Unknown attribute {} in API response for type {}".format(k, type(self)), Warning)
             except:
