@@ -61,7 +61,7 @@ class OsuApi:
             k=self.key,
             u=username,
             type=self._username_type(username),
-            m=mode
+            m=mode.value
             ), JsonList(User))
 
     def get_user_best(self, username, *, mode=OsuMode.osu, limit=50):
@@ -75,7 +75,7 @@ class OsuApi:
             k=self.key,
             u=username,
             type=self._username_type(username),
-            m=mode,
+            m=mode.value,
             limit=limit
             ), JsonList(Score))
 
@@ -90,7 +90,7 @@ class OsuApi:
             k=self.key,
             u=username,
             type=self._username_type(username),
-            m=mode,
+            m=mode.value,
             limit=limit
             ), JsonList(Score))
 
@@ -108,7 +108,7 @@ class OsuApi:
             b=beatmap_id,
             u=username,
             type=self._username_type(username),
-            m=mode,
+            m=mode.value,
             mods=mods,
             limit=limit), JsonList(Score))
 
@@ -131,7 +131,7 @@ class OsuApi:
             b=beatmap_id,
             u=username,
             type=self._username_type(username),
-            m=mode,
+            m=mode.value,
             a=include_converted,
             h=beatmap_hash,
             limit=limit
