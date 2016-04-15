@@ -65,8 +65,8 @@ class JsonObjWrapper:
 class OsuMode(Enum):
     osu = 0
     taiko = 1
-    mania = 2
-    ctb = 3
+    ctb = 2
+    mania = 3
 
 
 class Score(JsonObjWrapper):
