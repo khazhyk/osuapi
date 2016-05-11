@@ -187,6 +187,20 @@ class MatchMetadata(AttributeModel):
         return "<{0.__module__}.MatchMetadata id={0.match_id} name={0.name} start_time={0.start_time}>".format(self)
 
 
+class ScoringType(Enum):
+    score = 0
+    accuracy = 1
+    combo = 2
+    score_v2 = 3
+
+
+class TeamType(Enum):
+    head_to_head = 0
+    tag_coop = 1
+    team_vs = 2
+    tag_team_vs = 3
+
+
 class Game(AttributeModel):
     game_id = Attribute(int)
     start_time = Attribute(DateConverter)
@@ -194,8 +208,8 @@ class Game(AttributeModel):
     beatmap_id = Attribute(int)
     play_mode = Attribute(PreProcessInt(OsuMode))
     match_type = Attribute(str)  # not sure what this is?
-    scoring_type = Attribute(int)  # TODO: Make enumerate
-    team_type = Attribute(int)  # TODO: Make enumerate
+    scoring_type = Attribute(PreProcessInt(ScoringType))
+    team_type = Attribute(PreProcessInt(TeamType))
     mods = Attribute(int)  # TODO: Make mods type
     scores = Attribute(JsonList(TeamScore))
 
