@@ -1,17 +1,17 @@
 """Different classes to parse dicts/lists returned from json into meaningful data objects."""
 
-import warnings
 import datetime
 from enum import Enum
+from .dictmodel import AttributeModel, Attribute
 
 
 def JsonList(oftype):
     """Generate a converter that accepts a list of :oftype.
 
     field = JsonList(int) would expect to be passed a list of things to convert to int"""
-    class _:
-        def __new__(cls, lis):
-            return [oftype(entry) for entry in lis]
+    def _(lst):
+        return [oftype(entry) for entry in lst]
+
     return _
 
 
@@ -19,12 +19,12 @@ def Nullable(oftype):
     """Generate a converter that may be None, or :oftype.
 
     field = Nullable(DateConverter) would expect either null or something to convert to date"""
-    class _:
-        def __new__(cls, it):
-            if it is None:
-                return None
-            else:
-                return oftype(it)
+    def _(it):
+        if it is None:
+            return None
+        else:
+            return oftype(it)
+
     return _
 
 
@@ -32,34 +32,14 @@ def PreProcessInt(oftype):
     """Generate a converter that first converts the input to int before passing to :oftype.
 
     field = PreProcessInt(MyEnum) if field is a string in the json response to be interpteded as int"""
-    class _:
-        def __new__(cls, it):
-            return oftype(int(it))
+    def _(it):
+        return oftype(int(it))
     return _
 
 
-class DateConverter:
+def DateConverter(val):
     """Converter to convert osu! api's date type into datetime."""
-
-    def __new__(cls, val):
-        return datetime.datetime.strptime(val, "%Y-%m-%d %H:%M:%S")
-
-
-class JsonObjWrapper:
-    """Base class for data objects parsed from json objects."""
-
-    def __init__(self, dic):
-        for k, v in dic.items():
-            try:
-                if v is None:
-                    setattr(self, k, getattr(self, k)())
-                else:
-                    setattr(self, k, getattr(self, k)(v))
-            except AttributeError:
-                warnings.warn("Unknown attribute {} in API response for type {}".format(k, type(self)), Warning)
-            except:
-                warnings.warn("Error processing {} value {}".format(k, v), Warning)
-                raise
+    return datetime.datetime.strptime(val, "%Y-%m-%d %H:%M:%S")
 
 
 class OsuMode(Enum):
@@ -69,50 +49,52 @@ class OsuMode(Enum):
     mania = 3
 
 
-class Score(JsonObjWrapper):
-    beatmap_id = str
-    score = int
-    maxcombo = int
-    count50 = int
-    count100 = int
-    count300 = int
-    countmiss = int
-    countkatu = int
-    countgeki = int
-    perfect = bool
-    enabled_mods = int
-    user_id = int
-    date = DateConverter
-    rank = str
-    pp = float
+class Score(AttributeModel):
+    beatmap_id = Attribute(str)
+    score = Attribute(int)
+    maxcombo = Attribute(int)
+    count50 = Attribute(int)
+    count100 = Attribute(int)
+    count300 = Attribute(int)
+    countmiss = Attribute(int)
+    countkatu = Attribute(int)
+    countgeki = Attribute(int)
+    perfect = Attribute(bool)
+    enabled_mods = Attribute(int)
+    user_id = Attribute(int)
+    date = Attribute(DateConverter)
+    rank = Attribute(str)
+    pp = Attribute(float)
 
     def __repr__(self):
         return "<{0.__module__}.Score user_id={0.user_id} beatmap_id={0.beatmap_id} date={0.date}>".format(self)
 
-class TeamScore(Score):
-    slot = int
-    team = int
-setattr(TeamScore, "pass", bool) # hack
 
-class User(JsonObjWrapper):
-    user_id = int
-    username = str
-    count300 = int
-    count100 = int
-    count50 = int
-    playcount = int
-    ranked_score = int
-    total_score = int
-    pp_rank = int
-    level = float
-    pp_raw = float
-    accuracy = float
-    count_rank_ss = int
-    count_rank_s = int
-    count_rank_a = int
-    country = str
-    pp_country_rank = int
-    events = JsonList(str)
+class TeamScore(Score):
+    slot = Attribute(int)
+    team = Attribute(int)
+    passed = Attribute(bool, name="pass")
+
+
+class User(AttributeModel):
+    user_id = Attribute(int)
+    username = Attribute(str)
+    count300 = Attribute(int)
+    count100 = Attribute(int)
+    count50 = Attribute(int)
+    playcount = Attribute(int)
+    ranked_score = Attribute(int)
+    total_score = Attribute(int)
+    pp_rank = Attribute(int)
+    level = Attribute(float)
+    pp_raw = Attribute(float)
+    accuracy = Attribute(float)
+    count_rank_ss = Attribute(int)
+    count_rank_s = Attribute(int)
+    count_rank_a = Attribute(int)
+    country = Attribute(str)
+    pp_country_rank = Attribute(int)
+    events = Attribute(JsonList(str))
 
     @property
     def total_hits(self):
@@ -162,61 +144,62 @@ class BeatmapLanguage(Enum):
     italian = 11
 
 
-class Beatmap(JsonObjWrapper):
-    approved = PreProcessInt(BeatmapStatus)
-    approved_date = Nullable(DateConverter)
-    last_update = DateConverter
-    artist = str
-    beatmap_id = int
-    beatmapset_id = int
-    bpm = float
-    creator = str
-    difficultyrating = float
-    diff_size = float
-    diff_overall = float
-    diff_approach = float
-    diff_drain = float
-    hit_length = int
-    source = str
-    genre_id = PreProcessInt(BeatmapGenre)
-    language_id = PreProcessInt(BeatmapLanguage)
-    title = str
-    total_length = int
-    version = str
-    file_md5 = str
-    mode = PreProcessInt(OsuMode)
-    tags = str
-    favourite_count = int
-    playcount = int
-    passcount = int
-    max_combo = Nullable(int)
+class Beatmap(AttributeModel):
+    approved = Attribute(PreProcessInt(BeatmapStatus))
+    approved_date = Attribute(Nullable(DateConverter))
+    last_update = Attribute(DateConverter)
+    artist = Attribute(str)
+    beatmap_id = Attribute(int)
+    beatmapset_id = Attribute(int)
+    bpm = Attribute(float)
+    creator = Attribute(str)
+    difficultyrating = Attribute(float)
+    diff_size = Attribute(float)
+    diff_overall = Attribute(float)
+    diff_approach = Attribute(float)
+    diff_drain = Attribute(float)
+    hit_length = Attribute(int)
+    source = Attribute(str)
+    genre_id = Attribute(PreProcessInt(BeatmapGenre))
+    language_id = Attribute(PreProcessInt(BeatmapLanguage))
+    title = Attribute(str)
+    total_length = Attribute(int)
+    version = Attribute(str)
+    file_md5 = Attribute(str)
+    mode = Attribute(PreProcessInt(OsuMode))
+    tags = Attribute(str)
+    favourite_count = Attribute(int)
+    playcount = Attribute(int)
+    passcount = Attribute(int)
+    max_combo = Attribute(Nullable(int))
 
     def __repr__(self):
         return "<{0.__module__}.Beatmap title={0.title} creator={0.creator} id={0.beatmap_id}>".format(self)
 
-class MatchMetadata(JsonObjWrapper):
-    match_id = int
-    name = str
-    start_time = DateConverter
-    end_time = Nullable(DateConverter)
+
+class MatchMetadata(AttributeModel):
+    match_id = Attribute(int)
+    name = Attribute(str)
+    start_time = Attribute(DateConverter)
+    end_time = Attribute(Nullable(DateConverter))
 
     def __repr__(self):
         return "<{0.__module__}.MatchMetadata id={0.match_id} name={0.name} start_time={0.start_time}>".format(self)
 
-class Game(JsonObjWrapper):
-    game_id = int
-    start_time = DateConverter
-    end_time = DateConverter
-    beatmap_id = int
-    play_mode = PreProcessInt(OsuMode)
-    match_type = str # not sure what this is?
-    scoring_type = int # TODO: Make enumerate
-    team_type = int # TODO: Make enumerate
-    mods = int # TODO: Make mods type
-    scores = JsonList(TeamScore)
 
-class Match(JsonObjWrapper):
-    match = MatchMetadata
-    games = JsonList(Game)
+class Game(AttributeModel):
+    game_id = Attribute(int)
+    start_time = Attribute(DateConverter)
+    end_time = Attribute(DateConverter)
+    beatmap_id = Attribute(int)
+    play_mode = Attribute(PreProcessInt(OsuMode))
+    match_type = Attribute(str)  # not sure what this is?
+    scoring_type = Attribute(int)  # TODO: Make enumerate
+    team_type = Attribute(int)  # TODO: Make enumerate
+    mods = Attribute(int)  # TODO: Make mods type
+    scores = Attribute(JsonList(TeamScore))
 
 
+class Match(AttributeModel):
+    match = Attribute(MatchMetadata)
+    games = Attribute(JsonList(Game))
