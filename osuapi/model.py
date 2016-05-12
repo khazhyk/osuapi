@@ -51,7 +51,7 @@ class OsuMode(Enum):
 
 
 class OsuMod(Flags):
-    none = 0
+    NoMod = 0
     NoFail = 1
     Easy = 2
     NoVideo = 4
