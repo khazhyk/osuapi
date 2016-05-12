@@ -9,13 +9,13 @@ try:
 
         async def _process_request(self, endpoint, data, type_):
             resp = await self.sess.get(endpoint, params=data)
-            if resp.code != 200:
+            if resp.status != 200:
                 raise HTTPError(resp.status, resp.reason, await resp.text())
             data = await resp.json()
             return type_(data)
 
         def process_request(self, *args, **kw):
-            return self._process_request(self, *args, **kw)
+            return self._process_request(*args, **kw)
 except ImportError:
     pass
 
