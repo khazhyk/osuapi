@@ -4,7 +4,7 @@ try:
     import asyncio
 except ImportError:
     pass
-from .model import User, Score, JsonList, OsuMode, Beatmap, Match
+from .model import User, SoloScore, JsonList, OsuMode, Beatmap, Match
 from . import endpoints
 
 
@@ -77,7 +77,7 @@ class OsuApi:
             type=self._username_type(username),
             m=mode.value,
             limit=limit
-            ), JsonList(Score))
+            ), JsonList(SoloScore))
 
     def get_user_recent(self, username, *, mode=OsuMode.osu, limit=10):
         """get a user's most recent scores.

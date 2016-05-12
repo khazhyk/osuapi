@@ -3,6 +3,7 @@
 import datetime
 from enum import Enum
 from .dictmodel import AttributeModel, Attribute
+from .flags import Flags
 
 
 def JsonList(oftype):
@@ -49,8 +50,41 @@ class OsuMode(Enum):
     mania = 3
 
 
+class OsuMod(Flags):
+    none = 0
+    NoFail = 1
+    Easy = 2
+    NoVideo = 4
+    Hidden = 8
+    HardRock = 16
+    SuddenDeath = 32
+    DoubleTime = 64
+    Relax = 128
+    HalfTime = 256
+    Nightcore = 512  # Only set along with DoubleTime. i.e: NC only gives 576
+    Flashlight = 1024
+    Autoplay = 2048
+    SpunOut = 4096
+    Relax2 = 8192  # Autopilot?
+    Perfect = 16384
+    Key4 = 32768
+    Key5 = 65536
+    Key6 = 131072
+    Key7 = 262144
+    Key8 = 524288
+    keyMod = Key4 | Key5 | Key6 | Key7 | Key8
+    FadeIn = 1048576
+    Random = 2097152
+    LastMod = 4194304
+    FreeModAllowed = NoFail | Easy | Hidden | HardRock | SuddenDeath | Flashlight | FadeIn | Relax | Relax2 | SpunOut | keyMod
+    Key9 = 16777216
+    Key10 = 33554432
+    Key1 = 67108864
+    Key3 = 134217728
+    Key2 = 268435456
+
+
 class Score(AttributeModel):
-    beatmap_id = Attribute(str)
     score = Attribute(int)
     maxcombo = Attribute(int)
     count50 = Attribute(int)
@@ -60,20 +94,27 @@ class Score(AttributeModel):
     countkatu = Attribute(int)
     countgeki = Attribute(int)
     perfect = Attribute(bool)
-    enabled_mods = Attribute(int)
     user_id = Attribute(int)
-    date = Attribute(DateConverter)
     rank = Attribute(str)
-    pp = Attribute(float)
-
-    def __repr__(self):
-        return "<{0.__module__}.Score user_id={0.user_id} beatmap_id={0.beatmap_id} date={0.date}>".format(self)
 
 
 class TeamScore(Score):
     slot = Attribute(int)
     team = Attribute(int)
     passed = Attribute(bool, name="pass")
+
+    def __repr__(self):
+        return "<{0.__module__}.TeamScore user_id={0.user_id} team={0.team}>".format(self)
+
+
+class SoloScore(Score):
+    beatmap_id = Attribute(str)
+    pp = Attribute(float)
+    enabled_mods = Attribute(PreProcessInt(OsuMod))
+    date = Attribute(DateConverter)
+
+    def __repr__(self):
+        return "<{0.__module__}.SoloScore user_id={0.user_id} beatmap_id={0.beatmap_id} date={0.date}>".format(self)
 
 
 class User(AttributeModel):
@@ -210,8 +251,11 @@ class Game(AttributeModel):
     match_type = Attribute(str)  # not sure what this is?
     scoring_type = Attribute(PreProcessInt(ScoringType))
     team_type = Attribute(PreProcessInt(TeamType))
-    mods = Attribute(int)  # TODO: Make mods type
+    mods = Attribute(PreProcessInt(OsuMod))
     scores = Attribute(JsonList(TeamScore))
+
+    def __repr__(self):
+        return "<{0.__module__}.Game id={0.game_id} beatmap_id={0.beatmap_id} start_time={0.start_time}".format(self)
 
 
 class Match(AttributeModel):
