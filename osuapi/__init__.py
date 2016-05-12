@@ -4,4 +4,5 @@ __license__ = "MIT"
 __copyright__ = "Copyright khazhyk"
 __version__ = "0.0.5"
 
-from osuapi.osu import OsuApi
+from .osu import OsuApi
+from .connectors import *
