@@ -48,3 +48,11 @@ class AttributeModel(object, metaclass=AttributeModelMeta):
                 log.warn("Unknown attribute {} in API response for type {}".format(k, type(self)), Warning)
             else:
                 setattr(self, attr.field_name, attr.parse(v))
+
+    def _iterator(self):
+        for attr in dir(self):
+            if attr in self.__attributemodel__:
+                yield (attr, getattr(self, attr))
+
+    def __iter__(self):
+        return self._iterator()
