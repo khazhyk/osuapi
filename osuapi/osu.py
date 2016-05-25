@@ -33,7 +33,7 @@ class OsuApi:
         self.key = key
 
     def _make_req(self, endpoint, data, type_):
-        return self.connector.process_request(endpoint, data, type_)
+        return self.connector.process_request(endpoint, {k: v for k, v in data.items() if v is not None}, type_)
 
     @staticmethod
     def _username_type(username):
