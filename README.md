@@ -5,7 +5,7 @@ Welcome to osssss!
 
 osssss a wrapper for the osu! api.
 
-It's "agnositic" of the requesting backend. Comes with aiohttp and requests options.
+It's "agnostic" of the requesting backend. Comes with aiohttp and requests options.
 
 Using with aiohttp
 ```py

@@ -1,5 +1,3 @@
-"""osu! api client."""
-
 from .model import User, SoloScore, JsonList, OsuMode, Beatmap, Match
 from . import endpoints
 from .connectors import *
@@ -7,11 +5,18 @@ import warnings
 
 
 class OsuApi:
-    """osu! api client."""
+    """osu! api client.
+
+    Parameters
+    ----------
+    key
+        The osu! api key used for authorization.
+    connector : Optional[event loop].
+        The osuapi connector used for making requests. The library comes with
+        two implementations, :class:`AHConnector` for using aiohttp, and
+        :class:`ReqConnector` for using requests."""
 
     def __init__(self, key, *, connector):
-        """Pass requests or aiohttp or anything that implements get (session, etc)."""
-
         if not hasattr(connector, "process_request"):
             # dirty backwards compatability
             try:
@@ -42,10 +47,15 @@ class OsuApi:
         return "int" if isinstance(username, int) else "string"
 
     def get_user(self, username, *, mode=OsuMode.osu):
-        """get a user's information.
+        """Get a user profile.
 
-        :username may be a string representing the player's username, or an int representing the id.
-        :mode for which osu mode to look up
+
+        Parameters
+        ----------
+        username : str or int
+            A `str` representing the user's username, or an `int` representing the user's id.
+        mode : :class:`OsuMode`
+            The osu! game mode for which to look up. Defaults to osu!standard.
         """
         return self._make_req(endpoints.USER, dict(
             k=self.key,
@@ -55,11 +65,16 @@ class OsuApi:
             ), JsonList(User))
 
     def get_user_best(self, username, *, mode=OsuMode.osu, limit=50):
-        """get a user's best scores.
+        """Get a user's best scores.
 
-        :username as in get_user
-        :mode as in get_user
-        :limit defaults to 50, number of results to return
+        Parameters
+        ----------
+        username : str or int
+            A `str` representing the user's username, or an `int` representing the user's id.
+        mode : :class:`OsuMode`
+            The osu! game mode for which to look up. Defaults to osu!standard.
+        limit
+            The maximum number of results to return. Defaults to 50.
         """
         return self._make_req(endpoints.USER_BEST, dict(
             k=self.key,
@@ -70,11 +85,16 @@ class OsuApi:
             ), JsonList(SoloScore))
 
     def get_user_recent(self, username, *, mode=OsuMode.osu, limit=10):
-        """get a user's most recent scores.
+        """Get a user's most recent scores.
 
-        :username as in get_user
-        :mode as in get_user
-        :limit defaults to 10, max 50
+        Parameters
+        ----------
+        username : str or int
+            A `str` representing the user's username, or an `int` representing the user's id.
+        mode : :class:`OsuMode`
+            The osu! game mode for which to look up. Defaults to osu!standard.
+        limit
+            The maximum number of results to return. Defaults to 10, maximum 50.
         """
         return self._make_req(endpoints.USER_RECENT, dict(
             k=self.key,
@@ -85,13 +105,22 @@ class OsuApi:
             ), JsonList(Score))
 
     def get_scores(self, beatmap_id, *, username=None, mode=OsuMode.osu, mods=None, limit=50):
-        """get top scores for a given beatmap.
+        """Get the top scores for a given beatmap.
 
-        :beatmap_id must be a valid beatmap (not beatmapset) id.
-        :username may be optionally provided to get a specific user's score
-        :mode as in get_user
-        :mods may be optionally provided to get a scores with specific mods enabled
-        :limit number of results to return
+        FIXME - not sure these params are correct.
+        Parameters
+        ----------
+        beatmap_id
+            Individual Beatmap ID to lookup.
+        username : str or int
+            A `str` representing the user's username, or an `int` representing the user's id.
+            If specified, restricts returned scores to the specified user.
+        mode : :class:`OsuMode`
+            The osu! game mode for which to look up. Defaults to osu!standard.
+        mods : :class:`OsuMod`
+            If specified, restricts returned scores to the specified mods.
+        limit
+            Number of results to return. Defaults to 50, maximum FIXME.
         """
         return self._make_req(endpoints.SCORES, dict(
             k=self.key,
@@ -99,21 +128,32 @@ class OsuApi:
             u=username,
             type=self._username_type(username),
             m=mode.value,
-            mods=mods,
+            mods=mods.value,
             limit=limit), JsonList(Score))
 
     def get_beatmaps(self, *, since=None, beatmapset_id=None, beatmap_id=None, username=None, mode=OsuMode.osu,
                      include_converted=False, beatmap_hash=None, limit=500):
-        """get beatmaps.
+        """Get beatmaps.
 
-        :since only get beatmaps after this date
-        :beatmapset_id get betamaps for a specific set
-        :beatmap_id get a specific beatmap
-        :username get beatmaps by a specific user
-        :mode which mode of osu to get a beatmap for
-        :include_converted include autoconverts (default false)
-        :beatmap_hash get a beatmap by it's hash
-        :limit number of results to return
+        Parameters
+        ----------
+        since
+            FIXME - not used
+        beatmapset_id
+            If specified, restrict results to a specific beatmap set.
+        beatmap_id
+            If specified, restrict results to a specific beatmap.
+        username : `str` or `int`
+            A `str` representing the user's username, or an `int` representing the user's id.
+            If specified, restrict results to a specific user.
+        mode : :class:`OsuMode`
+            The osu! game mode for which to look up. Defaults to osu!standard.
+        include_converted : bool
+            Whether or not to include autoconverts. Defaults to false.
+        beatmap_hash
+            If specified, restricts results to a specific beatmap hash.
+        limit
+            Number of results to return. Defaults to 500, maximum FIXME.
         """
         return self._make_req(endpoints.BEATMAPS, dict(
             k=self.key,
@@ -128,9 +168,11 @@ class OsuApi:
             ), JsonList(Beatmap))
 
     def get_match(self, match_id):
-        """get a multiplayer match.
+        """Get a multiplayer match.
 
-        :match_id the id of the match to retrieve"""
+        match_id
+            The ID of the match to retrieve. This is the ID that you see in a online multiplayer match summary.
+            This does not correspond the in-game game ID."""
         return self._make_req(endpoints.MATCH, dict(
             k=self.key,
             mp=match_id), Match)
