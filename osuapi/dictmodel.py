@@ -56,3 +56,40 @@ class AttributeModel(object, metaclass=AttributeModelMeta):
 
     def __iter__(self):
         return self._iterator()
+
+
+def JsonList(oftype):
+    """Generate a converter that accepts a list of :oftype.
+
+    field = JsonList(int) would expect to be passed a list of things to convert to int"""
+    def _(lst):
+        return [oftype(entry) for entry in lst]
+
+    return _
+
+
+def Nullable(oftype):
+    """Generate a converter that may be None, or :oftype.
+
+    field = Nullable(DateConverter) would expect either null or something to convert to date"""
+    def _(it):
+        if it is None:
+            return None
+        else:
+            return oftype(it)
+
+    return _
+
+
+def PreProcessInt(oftype):
+    """Generate a converter that first converts the input to int before passing to :oftype.
+
+    field = PreProcessInt(MyEnum) if field is a string in the json response to be interpteded as int"""
+    def _(it):
+        return oftype(int(it))
+    return _
+
+
+def DateConverter(val):
+    """Converter to convert osu! api's date type into datetime."""
+    return datetime.datetime.strptime(val, "%Y-%m-%d %H:%M:%S")

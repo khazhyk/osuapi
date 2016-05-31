@@ -2,52 +2,24 @@
 
 import datetime
 from enum import Enum
-from .dictmodel import AttributeModel, Attribute
+from .dictmodel import AttributeModel, Attribute, JsonList, Nullable, PreProcessInt, DateConverter
 from .flags import Flags
 
 
-def JsonList(oftype):
-    """Generate a converter that accepts a list of :oftype.
-
-    field = JsonList(int) would expect to be passed a list of things to convert to int"""
-    def _(lst):
-        return [oftype(entry) for entry in lst]
-
-    return _
-
-
-def Nullable(oftype):
-    """Generate a converter that may be None, or :oftype.
-
-    field = Nullable(DateConverter) would expect either null or something to convert to date"""
-    def _(it):
-        if it is None:
-            return None
-        else:
-            return oftype(it)
-
-    return _
-
-
-def PreProcessInt(oftype):
-    """Generate a converter that first converts the input to int before passing to :oftype.
-
-    field = PreProcessInt(MyEnum) if field is a string in the json response to be interpteded as int"""
-    def _(it):
-        return oftype(int(it))
-    return _
-
-
-def DateConverter(val):
-    """Converter to convert osu! api's date type into datetime."""
-    return datetime.datetime.strptime(val, "%Y-%m-%d %H:%M:%S")
-
-
 class OsuMode(Enum):
-    osu = 0
-    taiko = 1
-    ctb = 2
-    mania = 3
+    osu = 0, "osu!standard"
+    taiko = 1, "osu!taiko"
+    ctb = 2, "osu!catchthebeat"
+    mania = 3, "osu!mania"
+
+    def __new__(cls, value, display):
+        obj = object.__new__(cls)
+        obj._value_ = value
+        obj.display_name = display
+        return obj
+
+    def __str__(self):
+        return self.display_name
 
 
 class OsuMod(Flags):
