@@ -20,10 +20,10 @@ class Flags(metaclass=FlagsMeta):
         self.value = value
 
     def __or__(self, other):
-        return BitEnum(self.value | other.value)
+        return type(self)(self.value | other.value)
 
     def __and__(self, other):
-        return BitEnum(self.value & other.value)
+        return type(self)(self.value & other.value)
 
     def __repr__(self):
         return "<{} {}>".format(type(self).__name__, " | ".join([tpl[1] for tpl in self.__flags_members__ if tpl[0] in self]))
