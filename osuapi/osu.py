@@ -137,8 +137,8 @@ class OsuApi:
 
         Parameters
         ----------
-        since
-            FIXME - not used
+        since : datetime
+            If specified, restrict results to beatmaps *ranked* after this date.
         beatmapset_id
             If specified, restrict results to a specific beatmap set.
         beatmap_id
@@ -160,6 +160,7 @@ class OsuApi:
             s=beatmapset_id,
             b=beatmap_id,
             u=username,
+            since="{:%Y-%m-%d %H:%M:%S}".format(since) if since is not None else None,
             type=self._username_type(username),
             m=mode.value,
             a=include_converted,
