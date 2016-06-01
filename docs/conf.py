@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # osssss documentation build configuration file, created by
-# sphinx-quickstart on Tue May 31 16:32:18 2016.
+# sphinx-quickstart on Wed Jun  1 09:45:16 2016.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -21,7 +21,8 @@ import shlex
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
-sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('..'))
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -78,7 +79,7 @@ language = None
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = []
+exclude_patterns = ['_build']
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
