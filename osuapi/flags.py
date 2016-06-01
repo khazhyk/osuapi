@@ -29,7 +29,19 @@ class Flags(metaclass=FlagsMeta):
         return "<{} {}>".format(type(self).__name__, " | ".join([tpl[1] for tpl in self.__flags_members__ if tpl[0] in self]))
 
     def __eq__(self, other):
+        """Exact value equality."""
         return self.value == other.value
 
     def __contains__(self, other):
+        """Check if any flags are set.
+
+        (OsuMod.Hidden | OsuMod.HardRock) in flags # Check if either hidden or hardrock are enabled.
+        OsuMod.keyMod in flags # Check if any keymod is enabled.
+        """
         return self.value & other.value or self.value == other.value
+
+    def all_set(self, other):
+        """Checks if all flags are set.
+
+        flags.all_set(OsuMod.Hidden | OsuMod.HardRock) # Check if both hidden and hardrock are enabled."""
+        return (self.value & other.value) == other.value
