@@ -20,13 +20,6 @@ osuapi.connectors module
     :undoc-members:
     :show-inheritance:
 
-osuapi.dictmodel module
------------------------
-
-.. automodule:: osuapi.dictmodel
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 osuapi.endpoints module
 -----------------------
@@ -44,13 +37,6 @@ osuapi.errors module
     :undoc-members:
     :show-inheritance:
 
-osuapi.flags module
--------------------
-
-.. automodule:: osuapi.flags
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 osuapi.model module
 -------------------

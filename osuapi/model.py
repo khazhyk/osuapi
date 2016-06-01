@@ -7,6 +7,8 @@ from .flags import Flags
 
 
 class OsuMode(Enum):
+    """Enum representing osu! game mode."""
+
     osu = 0, "osu!standard"
     taiko = 1, "osu!taiko"
     ctb = 2, "osu!catchthebeat"
@@ -23,6 +25,28 @@ class OsuMode(Enum):
 
 
 class OsuMod(Flags):
+    """Bitwise Flags representing osu! mods.
+
+
+    Usage
+    -----
+
+    FIXME - IDK how to inline code
+    ```py
+    # Check if a given flag is set.
+    OsuMod.HardRock in flags
+
+    # Check if a given flag is not set.
+    OsuMod.HardRock not in flags
+
+    # Check if all given flags are set.
+    flags.all_set(OsuMod.Hidden | OsuMod.HardRock)
+
+    # Check if any of given flags are set.
+    OsuMod.keyMod in flags
+    ```
+
+    """
     NoMod = 0
     NoFail = 1
     Easy = 2
@@ -57,6 +81,7 @@ class OsuMod(Flags):
 
 
 class Score(AttributeModel):
+    """Abstract class representing a score."""
     score = Attribute(int)
     maxcombo = Attribute(int)
     count50 = Attribute(int)
@@ -71,6 +96,7 @@ class Score(AttributeModel):
 
 
 class TeamScore(Score):
+    """Class representing a score in a multiplayer team game."""
     slot = Attribute(int)
     team = Attribute(int)
     passed = Attribute(bool, name="pass")
@@ -80,6 +106,7 @@ class TeamScore(Score):
 
 
 class SoloScore(Score):
+    """Class represeting a score in singleplayer."""
     beatmap_id = Attribute(str)
     pp = Attribute(float)
     enabled_mods = Attribute(PreProcessInt(OsuMod))
@@ -90,6 +117,7 @@ class SoloScore(Score):
 
 
 class User(AttributeModel):
+    """Class representing a user."""
     user_id = Attribute(int)
     username = Attribute(str)
     count300 = Attribute(Nullable(int))
@@ -121,6 +149,7 @@ class User(AttributeModel):
 
 
 class BeatmapStatus(Enum):
+    """Enum representing the ranked status of a beatmap."""
     graveyard = -2
     wip = -1
     pending = 0
@@ -130,6 +159,7 @@ class BeatmapStatus(Enum):
 
 
 class BeatmapGenre(Enum):
+    """Enum represeting the genre of a beatmap."""
     any = 0
     unspecified = 1
     video_game = 2
@@ -143,6 +173,7 @@ class BeatmapGenre(Enum):
 
 
 class BeatmapLanguage(Enum):
+    """Enum represeting the language of a beatmap."""
     any = 0
     other = 1
     english = 2
@@ -158,6 +189,7 @@ class BeatmapLanguage(Enum):
 
 
 class Beatmap(AttributeModel):
+    """Class represeting a beatmap."""
     approved = Attribute(PreProcessInt(BeatmapStatus))
     approved_date = Attribute(Nullable(DateConverter))
     last_update = Attribute(DateConverter)
@@ -191,6 +223,7 @@ class Beatmap(AttributeModel):
 
 
 class MatchMetadata(AttributeModel):
+    """Class representing info about a match."""
     match_id = Attribute(int)
     name = Attribute(str)
     start_time = Attribute(DateConverter)
@@ -201,6 +234,7 @@ class MatchMetadata(AttributeModel):
 
 
 class ScoringType(Enum):
+    """Enum representing the scoring type of a multiplayer game."""
     score = 0
     accuracy = 1
     combo = 2
@@ -208,6 +242,7 @@ class ScoringType(Enum):
 
 
 class TeamType(Enum):
+    """Enum representing the team type of a multiplayer game."""
     head_to_head = 0
     tag_coop = 1
     team_vs = 2
@@ -215,6 +250,7 @@ class TeamType(Enum):
 
 
 class Game(AttributeModel):
+    """Class representing an individual multiplayer game."""
     game_id = Attribute(int)
     start_time = Attribute(DateConverter)
     end_time = Attribute(DateConverter)
@@ -231,5 +267,6 @@ class Game(AttributeModel):
 
 
 class Match(AttributeModel):
+    """Class representing a match's info and collection of games."""
     match = Attribute(MatchMetadata)
     games = Attribute(JsonList(Game))
