@@ -1,6 +1,5 @@
 """Different classes to parse dicts/lists returned from json into meaningful data objects."""
 
-import datetime
 from enum import Enum
 from .dictmodel import AttributeModel, Attribute, JsonList, Nullable, PreProcessInt, DateConverter
 from .flags import Flags
