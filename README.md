@@ -1,11 +1,14 @@
-osssss
+osuapi
 ======
+[![pip](https://img.shields.io/pypi/v/osuapi.svg)](https://pypi.python.org/pypi/osuapi/)
+[![Documentation Status](http://readthedocs.org/projects/osssss/badge/?version=latest)](http://osssss.readthedocs.io/en/latest/?badge=latest)
 
 Welcome to osssss!
 
-osssss a wrapper for the osu! api.
+osuapi a python wrapper for the osu! api.
 
-It's "agnostic" of the requesting backend. Comes with aiohttp and requests options.
+It's "agnostic" of the requesting backend. Uses "connectors" to handle making requests and retrieving json.
+Comes with `aiohttp` and `requests` implementations.
 
 Using with aiohttp
 ```py
