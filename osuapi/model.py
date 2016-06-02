@@ -49,7 +49,7 @@ class OsuMod(Flags):
     NoMod = 0
     NoFail = 1, "NF"
     Easy = 2, "EZ"
-    NoVideo = 4, "NV"
+    NoVideo = 4
     Hidden = 8, "HD"
     HardRock = 16, "HR"
     SuddenDeath = 32, "SD"
@@ -58,9 +58,9 @@ class OsuMod(Flags):
     HalfTime = 256, "HT"
     Nightcore = 512, "NC"  # Only set along with DoubleTime. i.e: NC only gives 576
     Flashlight = 1024, "FL"
-    Autoplay = 2048, "AP"
+    Autoplay = 2048
     SpunOut = 4096, "SO"
-    Relax2 = 8192, "XX"  # Autopilot?
+    Relax2 = 8192, "AP"  # Autopilot?
     Perfect = 16384, "PF"
     Key4 = 32768, "4K"
     Key5 = 65536, "5K"
@@ -68,8 +68,8 @@ class OsuMod(Flags):
     Key7 = 262144, "7K"
     Key8 = 524288, "8K"
     FadeIn = 1048576, "FI"
-    Random = 2097152, "RN"
-    LastMod = 4194304, "LM"
+    Random = 2097152, "RD"
+    LastMod = 4194304
     Key9 = 16777216, "9K"
     Key10 = 33554432, "10K"
     Key1 = 67108864, "1K"
