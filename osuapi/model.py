@@ -1,118 +1,41 @@
 """Different classes to parse dicts/lists returned from json into meaningful data objects."""
 
-from enum import Enum
+from .enums import *
 from .dictmodel import AttributeModel, Attribute, JsonList, Nullable, PreProcessInt, DateConverter
-from .flags import Flags
-
-
-class OsuMode(Enum):
-    """Enum representing osu! game mode."""
-
-    osu = 0, "osu!standard"
-    taiko = 1, "osu!taiko"
-    ctb = 2, "osu!catchthebeat"
-    mania = 3, "osu!mania"
-
-    def __new__(cls, value, display):
-        obj = object.__new__(cls)
-        obj._value_ = value
-        obj.display_name = display
-        return obj
-
-    def __str__(self):
-        return self.display_name
-
-
-class OsuMod(Flags):
-    """Bitwise Flags representing osu! mods.
-
-
-    Usage
-    -----
-
-    FIXME - IDK how to inline code
-    ```py
-    # Check if a given flag is set.
-    OsuMod.HardRock in flags
-
-    # Check if a given flag is not set.
-    OsuMod.HardRock not in flags
-
-    # Check if all given flags are set.
-    flags.all_set(OsuMod.Hidden | OsuMod.HardRock)
-
-    # Check if any of given flags are set.
-    OsuMod.keyMod in flags
-    ```
-
-    """
-    NoMod = 0
-    NoFail = 1, "NF"
-    Easy = 2, "EZ"
-    NoVideo = 4
-    Hidden = 8, "HD"
-    HardRock = 16, "HR"
-    SuddenDeath = 32, "SD"
-    DoubleTime = 64, "DT"
-    Relax = 128, "RX"
-    HalfTime = 256, "HT"
-    Nightcore = 512, "NC"  # Only set along with DoubleTime. i.e: NC only gives 576
-    Flashlight = 1024, "FL"
-    Autoplay = 2048
-    SpunOut = 4096, "SO"
-    Relax2 = 8192, "AP"  # Autopilot?
-    Perfect = 16384, "PF"
-    Key4 = 32768, "4K"
-    Key5 = 65536, "5K"
-    Key6 = 131072, "6K"
-    Key7 = 262144, "7K"
-    Key8 = 524288, "8K"
-    FadeIn = 1048576, "FI"
-    Random = 2097152, "RD"
-    LastMod = 4194304
-    Key9 = 16777216, "9K"
-    Key10 = 33554432, "10K"
-    Key1 = 67108864, "1K"
-    Key3 = 134217728, "3K"
-    Key2 = 268435456, "2K"
-
-    def __init__(self, value, shortname=""):
-        Flags.__init__(self, value)
-        self._shortname = shortname
-
-    def __str__(self):
-        return self.longname
-
-    @property
-    def shortname(self):
-        return "".join(tpl[0]._shortname for tpl in self.enabled_flags)
-
-    @property
-    def longname(self):
-        return " ".join(tpl[1] for tpl in self.enabled_flags)
-
-    def __format__(self, format_spec):
-        """Format an OsuMod.
-
-        Formats
-        -------
-        s
-            shortname e.g. HDHR
-        l
-            longname e.g. Hidden HardRock"""
-        if format_spec == "s":
-            return self.shortname
-        elif format_spec == "l":
-            return self.longname
-        else:
-            return self.__str__()
-
-OsuMod.keyMod = OsuMod.Key4 | OsuMod.Key5 | OsuMod.Key6 | OsuMod.Key7 | OsuMod.Key8
-OsuMod.FreeModAllowed = OsuMod.NoFail | OsuMod.Easy | OsuMod.Hidden | OsuMod.HardRock | OsuMod.SuddenDeath | OsuMod.Flashlight | OsuMod.FadeIn | OsuMod.Relax | OsuMod.Relax2 | OsuMod.SpunOut | OsuMod.keyMod
 
 
 class Score(AttributeModel):
-    """Abstract class representing a score."""
+    """Abstract class representing a score.
+
+    Attributes
+    -----------
+    score : int
+        The score value
+    maxcombo : int
+        Largest combo achieved
+    count50 : int
+        Number of "50" hits
+    count100 : int
+        Number of "100" hits
+    count300 : int
+        Number of "300" hits
+    countmiss : int
+        Number of misses
+    countkatu : int
+        Number of "katu" sections (only 100s and 300s)
+    countgeki : int
+        Number of "geki" sections (only 300s)
+    perfect : bool
+        If the play is a full combo (maxcombo is maximal)
+    user_id : int
+        ID of user who played.
+    rank :  str
+        Letter rank achieved
+
+    See Also
+    ---------
+    <https://osu.ppy.sh/wiki/Score>
+    """
     score = Attribute(int)
     maxcombo = Attribute(int)
     count50 = Attribute(int)
@@ -127,7 +50,23 @@ class Score(AttributeModel):
 
 
 class TeamScore(Score):
-    """Class representing a score in a multiplayer team game."""
+    """Class representing a score in a multiplayer team game.
+
+    See :class:`Score`
+
+    Attributes
+    -----------
+    slot : int
+        Which multiplayer slot the player was in.
+    team : int
+        Which multiplayer team the player was in.
+    passed : bool
+        If the score is passing.
+
+    See Also
+    ---------
+    <https://osu.ppy.sh/wiki/Score>
+    """
     slot = Attribute(int)
     team = Attribute(int)
     passed = Attribute(bool, name="pass")
@@ -137,7 +76,25 @@ class TeamScore(Score):
 
 
 class SoloScore(Score):
-    """Class represeting a score in singleplayer."""
+    """Class represeting a score in singleplayer.
+
+    See :class:`Score`
+
+    Attributes
+    -----------
+    beatmap_id : int
+        Beatmap the score is for.
+    pp : float
+        How much PP the score is worth
+    enabled_mods : :class:`osuapi.enums.OsuMod`
+        Enabled modifiers
+    date : datetime
+        When the score was played.
+
+    See Also
+    ---------
+    <https://osu.ppy.sh/wiki/Score>
+    """
     beatmap_id = Attribute(str)
     pp = Attribute(float)
     enabled_mods = Attribute(PreProcessInt(OsuMod))
@@ -148,7 +105,48 @@ class SoloScore(Score):
 
 
 class User(AttributeModel):
-    """Class representing a user."""
+    """Class representing a user.
+
+    Attributes
+    -----------
+    user_id : int
+        User's unique identifier.
+    username : str
+        User's name.
+    count300 : int
+        Career total of "300" hits.
+    count100 : int
+        Career total of "100" hits.
+    count50 : int
+        Carrer total of "50" hits.
+    playcount : int
+        Career total play count.
+    ranked_score : int
+        Total sum of the best scores fro all the ranked beatmaps played online.
+    total_score : int
+        Total sum of all scores on ranked beatmaps, including failed trails.
+    pp_rank : int
+        Global ranking place.
+    accuracy : float
+        Weighted average of accuracy on top plays.
+    count_rank_ss : int
+        Career total of SS ranks.
+    count_rank_s : int
+        Career total of S ranks.
+    count_rank_a : int
+        Career total of A ranks.
+    country : str
+        Country the user is registered to.
+    pp_country_rank : int
+        Country ranking place.
+    events : list[str]
+        HTML snippets of recent "interesting" events.
+
+    See Also
+    ---------
+    <https://osu.ppy.sh/wiki/Score>
+
+    """
     user_id = Attribute(int)
     username = Attribute(str)
     count300 = Attribute(Nullable(int))
@@ -179,48 +177,70 @@ class User(AttributeModel):
         return username
 
 
-class BeatmapStatus(Enum):
-    """Enum representing the ranked status of a beatmap."""
-    graveyard = -2
-    wip = -1
-    pending = 0
-    ranked = 1
-    approved = 2
-    qualified = 3
-
-
-class BeatmapGenre(Enum):
-    """Enum represeting the genre of a beatmap."""
-    any = 0
-    unspecified = 1
-    video_game = 2
-    anime = 3
-    rock = 4
-    pop = 5
-    other = 6
-    novelty = 7
-    hip_hop = 9
-    electronic = 10
-
-
-class BeatmapLanguage(Enum):
-    """Enum represeting the language of a beatmap."""
-    any = 0
-    other = 1
-    english = 2
-    japanese = 3
-    chinese = 4
-    instrumental = 5
-    korean = 6
-    french = 7
-    german = 8
-    swedish = 9
-    spanish = 10
-    italian = 11
-
-
 class Beatmap(AttributeModel):
-    """Class represeting a beatmap."""
+    """Class represeting a beatmap
+
+    Attributes
+    -----------
+    approved : bool
+        Whether or not the map has been ranked.
+    approved_date : Optional[datetime]
+        When the beatmap was ranked, or None.
+    last_update : datetime
+        Last time the map was updated.
+    artist : str
+        Music metadata.
+    beatmap_id : int
+        Unique identifier for beatmap.
+    beatmapset_id : int
+        Unique identifier for set this beatmap belongs to.
+    bpm : float
+        Speed of map in beats per minute.
+    creator : str
+        Username of map creator.
+    difficultyrating : float
+        Star rating of a map.
+    diff_size : float
+        Circle Size. (CS)
+    diff_overall : float
+        Overall Difficulty. (OD)
+    diff_approach : float
+        Approach rate. (AR)
+    diff_drain : float
+        Health Drain (HP)
+    hit_length : int
+        Playable time in seconds. (Drain time)
+    source : str
+        Source of the music
+    genre_id : :class:`osuapi.enums.BeatmapGenre`
+        Genre of the music.
+    language_id : :class:`osuapi.enums.BeatmapLanguage`
+        Language of the music.
+    title : str
+        Title of the song.
+    total_length : int
+        Total song length in seconds.
+    version : str
+        Difficulty name.
+    file_md5 : str
+        md5 hash of map.
+    mode : :class:`osuapi.enums.OsuMode`
+        Game mode for the map.
+    tags : str
+        Space delimited tags for the map.
+    favourite_count : int
+        Number of users that have favorited this map.
+    playcount : int
+        Number of times this map has been played (including fails)/
+    passcount : int
+        Number of times this map has been passed.
+    max_combo : Optional[int]
+        Maximum possible combo.
+
+    See Also
+    ---------
+    <https://osu.ppy.sh/wiki/Beatmaps>
+    """
     approved = Attribute(PreProcessInt(BeatmapStatus))
     approved_date = Attribute(Nullable(DateConverter))
     last_update = Attribute(DateConverter)
@@ -254,7 +274,19 @@ class Beatmap(AttributeModel):
 
 
 class MatchMetadata(AttributeModel):
-    """Class representing info about a match."""
+    """Class representing info about a match.
+
+    Attributes
+    -----------
+    match_id : int
+        Unique identifier for this match.
+    name : str
+        Name of the match when it was first created.
+    start_time : datetime
+        When the match was created.
+    end_time : Optional[datetime]
+        When the match was ended, or None.
+    """
     match_id = Attribute(int)
     name = Attribute(str)
     start_time = Attribute(DateConverter)
@@ -264,24 +296,32 @@ class MatchMetadata(AttributeModel):
         return "<{0.__module__}.MatchMetadata id={0.match_id} name={0.name} start_time={0.start_time}>".format(self)
 
 
-class ScoringType(Enum):
-    """Enum representing the scoring type of a multiplayer game."""
-    score = 0
-    accuracy = 1
-    combo = 2
-    score_v2 = 3
-
-
-class TeamType(Enum):
-    """Enum representing the team type of a multiplayer game."""
-    head_to_head = 0
-    tag_coop = 1
-    team_vs = 2
-    tag_team_vs = 3
-
-
 class Game(AttributeModel):
-    """Class representing an individual multiplayer game."""
+    """Class representing an individual multiplayer game.
+
+    Attributes
+    -----------
+    game_id : int
+        Unique identifier for this game.
+    start_time : datetime
+        When the game started.
+    end_time : datetime
+        When the game ended.
+    beatmap_id : int
+        Beatmap played.
+    play_mode : :class:`osuapi.enums.OsuMode`
+        Game mode.
+    match_type
+        Not really sure...
+    scoring_type : :class:`osuapi.enums.ScoringType`
+        Scoring type of game.
+    team_type : :class:`osuapi.enums.TeamType`
+        Team type of the game.
+    mods : :class:`osuapi.enums.OsuMod`
+        Modifiers enabled for all players.
+    scores : list[:class:`TeamScore`]
+        List of scores for all players.
+    """
     game_id = Attribute(int)
     start_time = Attribute(DateConverter)
     end_time = Attribute(DateConverter)

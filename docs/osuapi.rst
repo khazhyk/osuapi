@@ -8,24 +8,26 @@ OsuApi
 
 .. automodule:: osuapi.osu
     :members:
-    :undoc-members:
-    :show-inheritance:
 
 Built-in Connectors
 ------------------------
 
 .. automodule:: osuapi.connectors
     :members:
-    :undoc-members:
-    :show-inheritance:
 
 Model
 -------------------
 
 .. automodule:: osuapi.model
     :members:
-    :undoc-members:
-    :show-inheritance:
+
+Enums
+-------------------
+
+.. automodule:: osuapi.enums
+	:members: 
+	:undoc-members:
+
 
 Thrown Errors
 --------------------
@@ -33,4 +35,3 @@ Thrown Errors
 .. automodule:: osuapi.errors
     :members:
     :undoc-members:
-    :show-inheritance:
