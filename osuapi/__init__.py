@@ -1,4 +1,4 @@
-__title__ = "osssss"
+__title__ = "osuapi"
 __author__ = "khazhyk"
 __license__ = "MIT"
 __copyright__ = "Copyright khazhyk"
