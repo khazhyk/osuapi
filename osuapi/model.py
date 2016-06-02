@@ -47,36 +47,68 @@ class OsuMod(Flags):
 
     """
     NoMod = 0
-    NoFail = 1
-    Easy = 2
-    NoVideo = 4
-    Hidden = 8
-    HardRock = 16
-    SuddenDeath = 32
-    DoubleTime = 64
-    Relax = 128
-    HalfTime = 256
-    Nightcore = 512  # Only set along with DoubleTime. i.e: NC only gives 576
-    Flashlight = 1024
-    Autoplay = 2048
-    SpunOut = 4096
-    Relax2 = 8192  # Autopilot?
-    Perfect = 16384
-    Key4 = 32768
-    Key5 = 65536
-    Key6 = 131072
-    Key7 = 262144
-    Key8 = 524288
-    keyMod = Key4 | Key5 | Key6 | Key7 | Key8
-    FadeIn = 1048576
-    Random = 2097152
-    LastMod = 4194304
-    FreeModAllowed = NoFail | Easy | Hidden | HardRock | SuddenDeath | Flashlight | FadeIn | Relax | Relax2 | SpunOut | keyMod
-    Key9 = 16777216
-    Key10 = 33554432
-    Key1 = 67108864
-    Key3 = 134217728
-    Key2 = 268435456
+    NoFail = 1, "NF"
+    Easy = 2, "EZ"
+    NoVideo = 4, "NV"
+    Hidden = 8, "HD"
+    HardRock = 16, "HR"
+    SuddenDeath = 32, "SD"
+    DoubleTime = 64, "DT"
+    Relax = 128, "RX"
+    HalfTime = 256, "HT"
+    Nightcore = 512, "NC"  # Only set along with DoubleTime. i.e: NC only gives 576
+    Flashlight = 1024, "FL"
+    Autoplay = 2048, "AP"
+    SpunOut = 4096, "SO"
+    Relax2 = 8192, "XX"  # Autopilot?
+    Perfect = 16384, "PF"
+    Key4 = 32768, "4K"
+    Key5 = 65536, "5K"
+    Key6 = 131072, "6K"
+    Key7 = 262144, "7K"
+    Key8 = 524288, "8K"
+    FadeIn = 1048576, "FI"
+    Random = 2097152, "RN"
+    LastMod = 4194304, "LM"
+    Key9 = 16777216, "9K"
+    Key10 = 33554432, "10K"
+    Key1 = 67108864, "1K"
+    Key3 = 134217728, "3K"
+    Key2 = 268435456, "2K"
+
+    def __init__(self, value, shortname=""):
+        Flags.__init__(self, value)
+        self._shortname = shortname
+
+    def __str__(self):
+        return self.longname
+
+    @property
+    def shortname(self):
+        return "".join(tpl[0]._shortname for tpl in self.enabled_flags)
+
+    @property
+    def longname(self):
+        return " ".join(tpl[1] for tpl in self.enabled_flags)
+
+    def __format__(self, format_spec):
+        """Format an OsuMod.
+
+        Formats
+        -------
+        s
+            shortname e.g. HDHR
+        l
+            longname e.g. Hidden HardRock"""
+        if format_spec == "s":
+            return self.shortname
+        elif format_spec == "l":
+            return self.longname
+        else:
+            return self.__str__()
+
+OsuMod.keyMod = OsuMod.Key4 | OsuMod.Key5 | OsuMod.Key6 | OsuMod.Key7 | OsuMod.Key8
+OsuMod.FreeModAllowed = OsuMod.NoFail | OsuMod.Easy | OsuMod.Hidden | OsuMod.HardRock | OsuMod.SuddenDeath | OsuMod.Flashlight | OsuMod.FadeIn | OsuMod.Relax | OsuMod.Relax2 | OsuMod.SpunOut | OsuMod.keyMod
 
 
 class Score(AttributeModel):

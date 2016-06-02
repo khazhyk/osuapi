@@ -1,12 +1,50 @@
+from collections import OrderedDict
+
+
+def _is_descriptor(obj):
+    """Returns True if obj is a descriptor, False otherwise.
+    From cpython Enum"""
+    return (
+            hasattr(obj, '__get__') or
+            hasattr(obj, '__set__') or
+            hasattr(obj, '__delete__'))
+
+
+def _is_dunder(name):
+    """Returns True if a __dunder__ name, False otherwise."""
+    return (name[:2] == name[-2:] == '__' and
+            name[2:3] != '_' and
+            name[-3:-2] != '_' and
+            len(name) > 4)
+
+
+def _is_sunder(name):
+    """Returns True if a _sunder_ name, False otherwise."""
+    return (name[0] == name[-1] == '_' and
+            name[1:2] != '_' and
+            name[-2:-1] != '_' and
+            len(name) > 2)
+
+
 class FlagsMeta(type):
     """Metaclass for declaring Bitwise flags"""
+
+    @classmethod
+    def __prepare__(cls, name, bases):
+        return OrderedDict()
+
     def __init__(cls, name, parents, dct):
         cls.__flags_members__ = []
         for field, value in dct.items():
-            if not callable(value) and not (field.startswith("__") and field.endswith("__")):
-                setattr(cls, field, cls(value))
+            if not _is_descriptor(value) and not _is_dunder(field) and not _is_sunder(field):
+                if not isinstance(value, tuple):
+                    args = (value,)
+                else:
+                    args = value
 
-                if (value & (value - 1)) == 0:
+                setattr(cls, field, cls(*args))
+
+                if (args[0] & (args[0] - 1)) == 0:
                     # Only show pure entries.
                     cls.__flags_members__.append((getattr(cls, field), field))
         return super().__init__(name, parents, dct)
@@ -26,13 +64,18 @@ class Flags(metaclass=FlagsMeta):
         return type(self)(self.value & other.value)
 
     def __repr__(self):
-        return "<{} {}>".format(type(self).__name__, " | ".join([tpl[1] for tpl in self.__flags_members__ if tpl[0] in self]))
+        return "<{} {}>".format(type(self).__name__, " | ".join((tpl[1] for tpl in self.enabled_flags)))
 
     def __eq__(self, other):
         """Exact value equality."""
         return self.value == other.value
 
-    def __contains__(self, other):
+    @property
+    def enabled_flags(self):
+        """Return the objects for each individual set flag."""
+        return [tpl for tpl in self.__flags_members__ if tpl[0] in self]
+
+    def contains_any(self, other):
         """Check if any flags are set.
 
         (OsuMod.Hidden | OsuMod.HardRock) in flags # Check if either hidden or hardrock are enabled.
@@ -40,8 +83,10 @@ class Flags(metaclass=FlagsMeta):
         """
         return self.value & other.value or self.value == other.value
 
-    def all_set(self, other):
+    __contains__ = contains_any
+
+    def contains_all(self, other):
         """Checks if all flags are set.
 
-        flags.all_set(OsuMod.Hidden | OsuMod.HardRock) # Check if both hidden and hardrock are enabled."""
+        flags.contains_all(OsuMod.Hidden | OsuMod.HardRock) # Check if both hidden and hardrock are enabled."""
         return (self.value & other.value) == other.value
