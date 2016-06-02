@@ -57,7 +57,7 @@ class OsuMod(Flags):
     Flashlight = 1024, "FL"
     Autoplay = 2048
     SpunOut = 4096, "SO"
-    Relax2 = 8192, "AP"  # Autopilot?
+    Autopilot = 8192, "AP"  # Called Relax2 on osu api documentation
     Perfect = 16384, "PF"
     Key4 = 32768, "4K"
     Key5 = 65536, "5K"
@@ -107,7 +107,7 @@ class OsuMod(Flags):
             return self.__str__()
 
 OsuMod.keyMod = OsuMod.Key4 | OsuMod.Key5 | OsuMod.Key6 | OsuMod.Key7 | OsuMod.Key8
-OsuMod.FreeModAllowed = OsuMod.NoFail | OsuMod.Easy | OsuMod.Hidden | OsuMod.HardRock | OsuMod.SuddenDeath | OsuMod.Flashlight | OsuMod.FadeIn | OsuMod.Relax | OsuMod.Relax2 | OsuMod.SpunOut | OsuMod.keyMod
+OsuMod.FreeModAllowed = OsuMod.NoFail | OsuMod.Easy | OsuMod.Hidden | OsuMod.HardRock | OsuMod.SuddenDeath | OsuMod.Flashlight | OsuMod.FadeIn | OsuMod.Relax | OsuMod.Autopilot | OsuMod.SpunOut | OsuMod.keyMod
 
 
 class BeatmapStatus(Enum):
