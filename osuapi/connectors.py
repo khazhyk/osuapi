@@ -5,6 +5,7 @@ try:
     import asyncio
 
     class AHConnector:
+        """Connector implementation using aiohttp."""
         def __init__(self, sess=None):
             self.sess = sess or aiohttp
 
@@ -25,6 +26,7 @@ try:
     import requests
 
     class ReqConnector:
+        """Connector implementation using requests."""
         def __init__(self, sess=None):
             self.sess = sess or requests
 
