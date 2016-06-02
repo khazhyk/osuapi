@@ -2,16 +2,18 @@ from .errors import HTTPError
 
 try:
     import aiohttp
+    import asyncio
 
     class AHConnector:
         def __init__(self, sess=None):
             self.sess = sess or aiohttp
 
-        async def _process_request(self, endpoint, data, type_):
-            resp = await self.sess.get(endpoint, params=data)
+        @asyncio.coroutine
+        def _process_request(self, endpoint, data, type_):
+            resp = yield from self.sess.get(endpoint, params=data)
             if resp.status != 200:
-                raise HTTPError(resp.status, resp.reason, await resp.text())
-            data = await resp.json()
+                raise HTTPError(resp.status, resp.reason, (yield from resp.text()))
+            data = yield from resp.json()
             return type_(data)
 
         def process_request(self, *args, **kw):
