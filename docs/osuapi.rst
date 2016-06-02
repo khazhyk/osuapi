@@ -1,10 +1,9 @@
-osuapi package
+.. currentmodule:: osuapi
+
+API Reference
 ==============
 
-Submodules
-----------
-
-osuapi.osu module
+OsuApi
 -----------------
 
 .. automodule:: osuapi.osu
@@ -12,7 +11,7 @@ osuapi.osu module
     :undoc-members:
     :show-inheritance:
 
-osuapi.connectors module
+Built-in Connectors
 ------------------------
 
 .. automodule:: osuapi.connectors
@@ -20,25 +19,7 @@ osuapi.connectors module
     :undoc-members:
     :show-inheritance:
 
-
-osuapi.endpoints module
------------------------
-
-.. automodule:: osuapi.endpoints
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-osuapi.errors module
---------------------
-
-.. automodule:: osuapi.errors
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-osuapi.model module
+Model
 -------------------
 
 .. automodule:: osuapi.model
@@ -46,10 +27,10 @@ osuapi.model module
     :undoc-members:
     :show-inheritance:
 
-Module contents
----------------
+Thrown Errors
+--------------------
 
-.. automodule:: osuapi
+.. automodule:: osuapi.errors
     :members:
     :undoc-members:
     :show-inheritance:

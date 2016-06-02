@@ -11,7 +11,7 @@ class OsuApi:
     ----------
     key
         The osu! api key used for authorization.
-    connector : Optional[event loop].
+    connector
         The osuapi connector used for making requests. The library comes with
         two implementations, :class:`AHConnector` for using aiohttp, and
         :class:`ReqConnector` for using requests."""
