@@ -70,6 +70,9 @@ class Flags(metaclass=FlagsMeta):
         """Exact value equality."""
         return self.value == other.value
 
+    def __hash__(self):
+        return self.value.__hash__()
+
     @property
     def enabled_flags(self):
         """Return the objects for each individual set flag."""
