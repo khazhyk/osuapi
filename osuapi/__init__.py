@@ -6,3 +6,4 @@ __version__ = "0.0.7"
 
 from .osu import OsuApi
 from .connectors import *
+from .model import OsuMode, OsuMod, BeatmapStatus, BeatmapGenre, BeatmapLanguage
