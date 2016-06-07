@@ -1,7 +1,7 @@
 osuapi
 ======
 [![pip](https://img.shields.io/pypi/v/osuapi.svg)](https://pypi.python.org/pypi/osuapi/)
-[![Documentation Status](http://readthedocs.org/projects/osssss/badge/?version=latest)](http://osssss.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](http://readthedocs.org/projects/osuapi/badge/?version=latest)](http://osuapi.readthedocs.io/en/latest/?badge=latest)
 
 Welcome to osssss!
 
