@@ -43,10 +43,11 @@ class FlagsMeta(type):
                     args = value
 
                 setattr(cls, field, cls(*args))
+                setattr(getattr(cls, field), "name", field)
 
                 if (args[0] & (args[0] - 1)) == 0:
                     # Only show pure entries.
-                    cls.__flags_members__.append((getattr(cls, field), field))
+                    cls.__flags_members__.append(getattr(cls, field))
         return super().__init__(name, parents, dct)
 
 
@@ -64,7 +65,7 @@ class Flags(metaclass=FlagsMeta):
         return type(self)(self.value & other.value)
 
     def __repr__(self):
-        return "<{} {}>".format(type(self).__name__, " | ".join((tpl[1] for tpl in self.enabled_flags)))
+        return "<{} {}>".format(type(self).__name__, " | ".join((tpl.name for tpl in self.enabled_flags)))
 
     def __eq__(self, other):
         """Exact value equality."""
@@ -76,7 +77,7 @@ class Flags(metaclass=FlagsMeta):
     @property
     def enabled_flags(self):
         """Return the objects for each individual set flag."""
-        return [tpl for tpl in self.__flags_members__ if tpl[0] in self]
+        return [tpl for tpl in self.__flags_members__ if tpl in self]
 
     def contains_any(self, other):
         """Check if any flags are set.
