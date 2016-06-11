@@ -81,14 +81,27 @@ class OsuMod(Flags):
         return self.longname
 
     @property
+    def _flags_clean_nightcore(self):
+        enb = self.enabled_flags
+
+        found = None
+        for idx, item in enumerate(enb):
+            if item is OsuMod.DoubleTime:
+                found = idx
+            if item is OsuMod.Nightcore and found is not None:
+                del enb[found]
+                break
+        return enb
+
+    @property
     def shortname(self):
         """The initialism representing this mod. (e.g. HDHR)"""
-        return "".join(tpl[0]._shortname for tpl in self.enabled_flags)
+        return "".join(tpl._shortname for tpl in self._flags_clean_nightcore)
 
     @property
     def longname(self):
         """The long name representing this mod. (e.g. Hidden DoubleTime)"""
-        return " ".join(tpl[1] for tpl in self.enabled_flags)
+        return " ".join(tpl.name for tpl in self._flags_clean_nightcore)
 
     def __format__(self, format_spec):
         """Format an OsuMod.
