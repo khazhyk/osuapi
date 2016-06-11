@@ -77,7 +77,9 @@ class Flags(metaclass=FlagsMeta):
     @property
     def enabled_flags(self):
         """Return the objects for each individual set flag."""
-        return [tpl for tpl in self.__flags_members__ if tpl in self]
+        for tpl in self.__flags_members__:
+            if tpl.value == self.value or tpl.value & self.value:
+                yield tpl
 
     def contains_any(self, other):
         """Check if any flags are set.
@@ -85,7 +87,7 @@ class Flags(metaclass=FlagsMeta):
         (OsuMod.Hidden | OsuMod.HardRock) in flags # Check if either hidden or hardrock are enabled.
         OsuMod.keyMod in flags # Check if any keymod is enabled.
         """
-        return self.value & other.value or self.value == other.value
+        return self.value == other.value or self.value & other.value
 
     __contains__ = contains_any
 

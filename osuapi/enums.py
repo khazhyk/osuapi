@@ -82,16 +82,10 @@ class OsuMod(Flags):
 
     @property
     def _flags_clean_nightcore(self):
-        enb = self.enabled_flags
-
-        found = None
-        for idx, item in enumerate(enb):
-            if item is OsuMod.DoubleTime:
-                found = idx
-            if item is OsuMod.Nightcore and found is not None:
-                del enb[found]
-                break
-        return enb
+        if OsuMod.Nightcore in self:
+            yield from OsuMod(self.value & ~OsuMod.DoubleTime.value).enabled_flags
+        else:
+            yield from self.enabled_flags
 
     @property
     def shortname(self):
