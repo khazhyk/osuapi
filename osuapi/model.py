@@ -118,15 +118,19 @@ class User(AttributeModel):
     count100 : int
         Career total of "100" hits.
     count50 : int
-        Carrer total of "50" hits.
+        Career total of "50" hits.
     playcount : int
         Career total play count.
     ranked_score : int
-        Total sum of the best scores fro all the ranked beatmaps played online.
+        Total sum of the best scores from all the ranked beatmaps played online.
     total_score : int
         Total sum of all scores on ranked beatmaps, including failed trails.
     pp_rank : int
         Global ranking place.
+    level: float
+        User's level
+    pp_raw: float
+        User's Performance Point
     accuracy : float
         Weighted average of accuracy on top plays.
     count_rank_ss : int
