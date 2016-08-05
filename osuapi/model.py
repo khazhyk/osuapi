@@ -130,7 +130,7 @@ class User(AttributeModel):
     level: float
         User's level
     pp_raw: float
-        User's Performance Point
+        User's performance points
     accuracy : float
         Weighted average of accuracy on top plays.
     count_rank_ss : int
