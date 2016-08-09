@@ -34,7 +34,8 @@ class FlagsMeta(type):
         return OrderedDict()
 
     def __init__(cls, name, parents, dct):
-        cls.__flags_members__ = []
+        cls.__flags_members__ = {}
+        cls.__max_val__ = 0
         for field, value in dct.items():
             if not _is_descriptor(value) and not _is_dunder(field) and not _is_sunder(field):
                 if not isinstance(value, tuple):
@@ -47,7 +48,8 @@ class FlagsMeta(type):
 
                 if (args[0] & (args[0] - 1)) == 0:
                     # Only show pure entries.
-                    cls.__flags_members__.append(getattr(cls, field))
+                    cls.__flags_members__[args[0]] = getattr(cls, field)
+                    cls.__max_val__ = max(cls.__max_val__, args[0])
         return super().__init__(name, parents, dct)
 
 
@@ -77,9 +79,12 @@ class Flags(metaclass=FlagsMeta):
     @property
     def enabled_flags(self):
         """Return the objects for each individual set flag."""
-        for tpl in self.__flags_members__:
-            if tpl.value == self.value or tpl.value & self.value:
-                yield tpl
+        mask = 0x1
+
+        while mask <= self.__max_val__:
+            if mask & self.value:
+                yield self.__flags_members__[mask]
+            mask <<= 1
 
     def contains_any(self, other):
         """Check if any flags are set.
