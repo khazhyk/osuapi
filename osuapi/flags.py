@@ -34,7 +34,7 @@ class FlagsMeta(type):
         return OrderedDict()
 
     def __init__(cls, name, parents, dct):
-        cls.__flags_members__ = []
+        cls.__flags_members__ = {}
         for field, value in dct.items():
             if not _is_descriptor(value) and not _is_dunder(field) and not _is_sunder(field):
                 if not isinstance(value, tuple):
@@ -47,7 +47,7 @@ class FlagsMeta(type):
 
                 if (args[0] & (args[0] - 1)) == 0:
                     # Only show pure entries.
-                    cls.__flags_members__.append(getattr(cls, field))
+                    cls.__flags_members__[args[0]] = (getattr(cls, field))
         return super().__init__(name, parents, dct)
 
 
@@ -65,7 +65,7 @@ class Flags(metaclass=FlagsMeta):
         return type(self)(self.value & other.value)
 
     def __repr__(self):
-        return "<{} {}>".format(type(self).__name__, " | ".join((tpl.name for tpl in self.enabled_flags)))
+        return "<%s %s>" % (type(self).__name__, " | ".join((tpl.name for tpl in self.enabled_flags)))
 
     def __eq__(self, other):
         """Exact value equality."""
@@ -77,9 +77,15 @@ class Flags(metaclass=FlagsMeta):
     @property
     def enabled_flags(self):
         """Return the objects for each individual set flag."""
-        for tpl in self.__flags_members__:
-            if tpl.value == self.value or tpl.value & self.value:
-                yield tpl
+        if not self.value:
+            yield self.__flags_members__[0]
+            return
+
+        val = self.value
+        while val:
+            lowest_bit = val & -val
+            val ^= lowest_bit
+            yield self.__flags_members__[lowest_bit]
 
     def contains_any(self, other):
         """Check if any flags are set.
