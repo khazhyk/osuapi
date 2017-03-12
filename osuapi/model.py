@@ -178,7 +178,7 @@ class User(AttributeModel):
         return "<{0.__module__}.User username={0.username} user_id={0.user_id}>".format(self)
 
     def __str__(self):
-        return self.username
+        return username
 
 
 class Beatmap(AttributeModel):
