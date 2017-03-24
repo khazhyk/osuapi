@@ -3,6 +3,10 @@ from . import endpoints
 from .connectors import *
 import warnings
 
+def _username_type(username):
+    if username is None:
+        return None
+    return "id" if isinstance(username, int) else "string"
 
 class OsuApi:
     """osu! api client.
@@ -40,12 +44,6 @@ class OsuApi:
     def _make_req(self, endpoint, data, type_):
         return self.connector.process_request(endpoint, {k: v for k, v in data.items() if v is not None}, type_)
 
-    @staticmethod
-    def _username_type(username):
-        if username is None:
-            return None
-        return "int" if isinstance(username, int) else "string"
-
     def get_user(self, username, *, mode=OsuMode.osu):
         """Get a user profile.
 
@@ -59,7 +57,7 @@ class OsuApi:
         return self._make_req(endpoints.USER, dict(
             k=self.key,
             u=username,
-            type=self._username_type(username),
+            type=_username_type(username),
             m=mode.value
             ), JsonList(User))
 
@@ -78,7 +76,7 @@ class OsuApi:
         return self._make_req(endpoints.USER_BEST, dict(
             k=self.key,
             u=username,
-            type=self._username_type(username),
+            type=_username_type(username),
             m=mode.value,
             limit=limit
             ), JsonList(SoloScore))
@@ -98,7 +96,7 @@ class OsuApi:
         return self._make_req(endpoints.USER_RECENT, dict(
             k=self.key,
             u=username,
-            type=self._username_type(username),
+            type=_username_type(username),
             m=mode.value,
             limit=limit
             ), JsonList(Score))
@@ -123,7 +121,7 @@ class OsuApi:
             k=self.key,
             b=beatmap_id,
             u=username,
-            type=self._username_type(username),
+            type=_username_type(username),
             m=mode.value,
             mods=mods.value,
             limit=limit), JsonList(Score))
@@ -158,7 +156,7 @@ class OsuApi:
             b=beatmap_id,
             u=username,
             since="{:%Y-%m-%d %H:%M:%S}".format(since) if since is not None else None,
-            type=self._username_type(username),
+            type=_username_type(username),
             m=mode.value,
             a=include_converted,
             h=beatmap_hash,
