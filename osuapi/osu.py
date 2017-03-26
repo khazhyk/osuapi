@@ -21,23 +21,6 @@ class OsuApi:
         :class:`osuapi.connectors.ReqConnector` for using requests."""
 
     def __init__(self, key, *, connector):
-        if not hasattr(connector, "process_request"):
-            # dirty backwards compatability
-            try:
-                import aiohttp
-                if connector is aiohttp or isinstance(connector, aiohttp.ClientSession):
-                    connector = AHConnector(connector)
-                    warnings.warn("Connector should now be a connector class, not aiohttp or a ClientSession directly. See use osuapi.AHConnector", Warning)
-            except ImportError:
-                pass
-            try:
-                import requests
-                if connector is requests or isinstance(connector, requests.Session):
-                    connector = ReqConnector(connector)
-                    warnings.warn("Connector should now be a connector class, not requests or a Session directly. See use osuapi.ReqConnector", Warning)
-            except ImportError:
-                pass
-
         self.connector = connector
         self.key = key
 
