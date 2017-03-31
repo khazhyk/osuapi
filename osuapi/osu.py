@@ -3,6 +3,10 @@ from . import endpoints
 from .connectors import *
 import warnings
 
+def _username_type(username):
+    if username is None:
+        return None
+    return "id" if isinstance(username, int) else "string"
 
 class OsuApi:
     """osu! api client.
@@ -17,34 +21,17 @@ class OsuApi:
         :class:`osuapi.connectors.ReqConnector` for using requests."""
 
     def __init__(self, key, *, connector):
-        if not hasattr(connector, "process_request"):
-            # dirty backwards compatability
-            try:
-                import aiohttp
-                if connector is aiohttp or isinstance(connector, aiohttp.ClientSession):
-                    connector = AHConnector(connector)
-                    warnings.warn("Connector should now be a connector class, not aiohttp or a ClientSession directly. See use osuapi.AHConnector", Warning)
-            except ImportError:
-                pass
-            try:
-                import requests
-                if connector is requests or isinstance(connector, requests.Session):
-                    connector = ReqConnector(connector)
-                    warnings.warn("Connector should now be a connector class, not requests or a Session directly. See use osuapi.ReqConnector", Warning)
-            except ImportError:
-                pass
-
         self.connector = connector
         self.key = key
 
+    def __del__(self):
+        self.close()
+
+    def close(self):
+        self.connector.close()
+
     def _make_req(self, endpoint, data, type_):
         return self.connector.process_request(endpoint, {k: v for k, v in data.items() if v is not None}, type_)
-
-    @staticmethod
-    def _username_type(username):
-        if username is None:
-            return None
-        return "int" if isinstance(username, int) else "string"
 
     def get_user(self, username, *, mode=OsuMode.osu):
         """Get a user profile.
@@ -59,7 +46,7 @@ class OsuApi:
         return self._make_req(endpoints.USER, dict(
             k=self.key,
             u=username,
-            type=self._username_type(username),
+            type=_username_type(username),
             m=mode.value
             ), JsonList(User))
 
@@ -78,7 +65,7 @@ class OsuApi:
         return self._make_req(endpoints.USER_BEST, dict(
             k=self.key,
             u=username,
-            type=self._username_type(username),
+            type=_username_type(username),
             m=mode.value,
             limit=limit
             ), JsonList(SoloScore))
@@ -98,7 +85,7 @@ class OsuApi:
         return self._make_req(endpoints.USER_RECENT, dict(
             k=self.key,
             u=username,
-            type=self._username_type(username),
+            type=_username_type(username),
             m=mode.value,
             limit=limit
             ), JsonList(Score))
@@ -123,7 +110,7 @@ class OsuApi:
             k=self.key,
             b=beatmap_id,
             u=username,
-            type=self._username_type(username),
+            type=_username_type(username),
             m=mode.value,
             mods=mods.value,
             limit=limit), JsonList(Score))
@@ -158,7 +145,7 @@ class OsuApi:
             b=beatmap_id,
             u=username,
             since="{:%Y-%m-%d %H:%M:%S}".format(since) if since is not None else None,
-            type=self._username_type(username),
+            type=_username_type(username),
             m=mode.value,
             a=include_converted,
             h=beatmap_hash,
