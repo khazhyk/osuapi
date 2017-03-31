@@ -116,7 +116,7 @@ class OsuApi:
             limit=limit), JsonList(Score))
 
     def get_beatmaps(self, *, since=None, beatmapset_id=None, beatmap_id=None, username=None, mode=OsuMode.osu,
-                     include_converted=False, beatmap_hash=None, limit=500):
+                     include_converted=0, beatmap_hash=None, limit=500):
         """Get beatmaps.
 
         Parameters
