@@ -147,7 +147,7 @@ class OsuApi:
             since="{:%Y-%m-%d %H:%M:%S}".format(since) if since is not None else None,
             type=_username_type(username),
             m=mode.value,
-            a=include_converted,
+            a=int(include_converted),
             h=beatmap_hash,
             limit=limit
             ), JsonList(Beatmap))
