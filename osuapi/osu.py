@@ -116,7 +116,7 @@ class OsuApi:
             limit=limit), JsonList(Score))
 
     def get_beatmaps(self, *, since=None, beatmapset_id=None, beatmap_id=None, username=None, mode=OsuMode.osu,
-                     include_converted=0, beatmap_hash=None, limit=500):
+                     include_converted=False, beatmap_hash=None, limit=500):
         """Get beatmaps.
 
         Parameters
@@ -147,7 +147,7 @@ class OsuApi:
             since="{:%Y-%m-%d %H:%M:%S}".format(since) if since is not None else None,
             type=_username_type(username),
             m=mode.value,
-            a=include_converted,
+            a=int(include_converted),
             h=beatmap_hash,
             limit=limit
             ), JsonList(Beatmap))
