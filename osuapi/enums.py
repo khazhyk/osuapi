@@ -130,6 +130,7 @@ class BeatmapStatus(Enum):
     ranked = 1
     approved = 2
     qualified = 3
+    loved = 4
 
 
 class BeatmapGenre(Enum):
