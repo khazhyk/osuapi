@@ -8,7 +8,7 @@ from .errors import HTTPError
 
 def _bad_import_class(msg):
     class _BadImportClass:
-        def __init__(self):
+        def __init__(self, *args, **kwargs):
             raise NotImplementedError(msg)
     return _BadImportClass
 
