@@ -75,8 +75,34 @@ class TeamScore(Score):
         return "<{0.__module__}.TeamScore user_id={0.user_id} team={0.team}>".format(self)
 
 
+class RecentScore(Score):
+    """Class representing a recent score.
+
+    See :class:`Score`
+
+    Attributes
+    -----------
+    beatmap_id : int
+        Beatmap the score is for.
+    enabled_mods : :class:`osuapi.enums.OsuMod`
+        Enabled modifiers
+    date : datetime
+        When the score was played.
+
+    See Also
+    ---------
+    <https://osu.ppy.sh/wiki/Score>
+    """
+    beatmap_id = Attribute(str)
+    enabled_mods = Attribute(PreProcessInt(OsuMod))
+    date = Attribute(DateConverter)
+
+    def __repr__(self):
+        return "<{0.__module__}.SoloScore user_id={0.user_id} beatmap_id={0.beatmap_id} date={0.date}>".format(self)
+
+
 class SoloScore(Score):
-    """Class represeting a score in singleplayer.
+    """Class representing a score in singleplayer.
 
     See :class:`Score`
 
@@ -102,6 +128,38 @@ class SoloScore(Score):
 
     def __repr__(self):
         return "<{0.__module__}.SoloScore user_id={0.user_id} beatmap_id={0.beatmap_id} date={0.date}>".format(self)
+
+
+class BeatmapScore(Score):
+    """Class representing a score attached to a beatmap.
+
+    See :class:`Score`
+
+    Attributes
+    -----------
+    username : str
+        Name of user.
+    pp : float
+        How much PP the score is worth
+    enabled_mods : :class:`osuapi.enums.OsuMod`
+        Enabled modifiers
+    date : datetime
+        When the score was played.
+    score_id : int
+        ID of score.
+
+    See Also
+    ---------
+    <https://osu.ppy.sh/wiki/Score>
+    """
+    username = Attribute(str)
+    pp = Attribute(float)
+    enabled_mods = Attribute(PreProcessInt(OsuMod))
+    date = Attribute(DateConverter)
+    score_id = Attribute(int)
+
+    def __repr__(self):
+        return "<{0.__module__}.BeatmapScore user_id={0.user_id} score_id={0.score_id} date={0.date}>".format(self)
 
 
 class User(AttributeModel):
@@ -182,7 +240,7 @@ class User(AttributeModel):
 
 
 class Beatmap(AttributeModel):
-    """Class represeting a beatmap
+    """Class representing a beatmap
 
     Attributes
     -----------

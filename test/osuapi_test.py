@@ -1,8 +1,8 @@
 import os
 import unittest
-
+import warnings
 import osuapi
-
+import osuapi.dictmodel
 
 class OsuApiTest(unittest.TestCase):
 
@@ -10,18 +10,34 @@ class OsuApiTest(unittest.TestCase):
         self.api = osuapi.OsuApi(
             key=os.environ['OSU_API_KEY'],
             connector=osuapi.ReqConnector())
+        warnings.simplefilter("error")
 
     def test_get_user(self):
-        self.api.get_user("peppy")
+        res = self.api.get_user("khazhyk")
+
+        for k, v in dict(res[0]).items():
+            self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
 
     def test_get_user_best(self):
-        self.api.get_user_best("peppy")
+        res = self.api.get_user_best("khazhyk")
+
+        for k, v in dict(res[0]).items():
+            self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
 
     def test_get_user_recent(self):
-        self.api.get_user_recent("peppy")
+        res = self.api.get_user_recent("khazhyk")
+
+        for k, v in dict(res[0]).items():
+            self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
 
     def test_get_scores(self):
-        self.api.get_scores(774965, username="cookiezi")
+        res = self.api.get_scores(774965, username="cookiezi")
+
+        for k, v in dict(res[0]).items():
+            self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
 
     def test_get_beatmaps(self):
-        self.api.get_beatmaps(limit=1)
+        res = self.api.get_beatmaps(limit=1)
+
+        for k, v in dict(res[0]).items():
+            self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)

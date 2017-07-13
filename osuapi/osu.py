@@ -1,4 +1,4 @@
-from .model import User, SoloScore, JsonList, OsuMode, Beatmap, Match
+from .model import User, BeatmapScore, RecentScore, Score, SoloScore, JsonList, OsuMode, Beatmap, Match
 from . import endpoints
 from .connectors import *
 import warnings
@@ -71,7 +71,7 @@ class OsuApi:
             ), JsonList(SoloScore))
 
     def get_user_recent(self, username, *, mode=OsuMode.osu, limit=10):
-        """Get a user's most recent scores.
+        """Get a user's most recent scores, within the last 24 hours.
 
         Parameters
         ----------
@@ -88,7 +88,7 @@ class OsuApi:
             type=_username_type(username),
             m=mode.value,
             limit=limit
-            ), JsonList(SoloScore))
+            ), JsonList(RecentScore))
 
     def get_scores(self, beatmap_id, *, username=None, mode=OsuMode.osu, mods=None, limit=50):
         """Get the top scores for a given beatmap.
@@ -113,7 +113,7 @@ class OsuApi:
             type=_username_type(username),
             m=mode.value,
             mods=mods and mods.value,
-            limit=limit), JsonList(SoloScore))
+            limit=limit), JsonList(BeatmapScore))
 
     def get_beatmaps(self, *, since=None, beatmapset_id=None, beatmap_id=None, username=None, mode=OsuMode.osu,
                      include_converted=False, beatmap_hash=None, limit=500):

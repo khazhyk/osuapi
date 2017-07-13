@@ -1,6 +1,7 @@
 from enum import Enum
 import logging
 import datetime
+import warnings
 
 log = logging.getLogger(__name__)
 
@@ -45,8 +46,7 @@ class AttributeModel(object, metaclass=AttributeModelMeta):
             try:
                 attr = self.__attributemodel__[k]
             except KeyError:
-                print("help")
-                log.warn("Unknown attribute {} in API response for type {}".format(k, type(self)), Warning)
+                warnings.warn("Unknown attribute {} in API response for type {}".format(k, type(self)), Warning)
             else:
                 setattr(self, attr.field_name, attr.parse(v))
 
