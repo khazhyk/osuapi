@@ -88,7 +88,7 @@ class OsuApi:
             type=_username_type(username),
             m=mode.value,
             limit=limit
-            ), JsonList(Score))
+            ), JsonList(SoloScore))
 
     def get_scores(self, beatmap_id, *, username=None, mode=OsuMode.osu, mods=None, limit=50):
         """Get the top scores for a given beatmap.
@@ -112,8 +112,8 @@ class OsuApi:
             u=username,
             type=_username_type(username),
             m=mode.value,
-            mods=mods.value,
-            limit=limit), JsonList(Score))
+            mods=mods and mods.value,
+            limit=limit), JsonList(SoloScore))
 
     def get_beatmaps(self, *, since=None, beatmapset_id=None, beatmap_id=None, username=None, mode=OsuMode.osu,
                      include_converted=False, beatmap_hash=None, limit=500):
