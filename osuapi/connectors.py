@@ -32,7 +32,7 @@ try:
             self.sess.close()
 
         @asyncio.coroutine
-        def process_request(self, endpoint, data, type_):
+        def process_request(self, endpoint, data, type_, retries=5):
             """Make and process the request.
 
             Parameters
@@ -44,19 +44,30 @@ try:
             type_ : `type`
                 A converter to which to pass the response json and return.
             """
-            resp = yield from self.sess.get(endpoint, params=data)
-            if resp.status != 200:
-                raise HTTPError(resp.status, resp.reason,
-                                (yield from resp.text()))
-            data = yield from resp.json()
-            resp.close()
-            return type_(data)
+
+            while retries:
+                try:
+                    resp = yield from self.sess.get(endpoint, params=data)
+                    if resp.status == 200:
+                        data = yield from resp.json()
+                        return type_(data)
+                    elif resp.status == 504 and retries:
+                        # Retry on 504
+                        retries -= 1
+                        yield from asyncio.sleep(1)
+                    else:
+                        break
+                finally:
+                    resp.close()
+            raise HTTPError(resp.status, resp.reason,
+                            (yield from resp.text()))
 except ImportError:
     AHConnector = _bad_import_class(
         "You need to install `aiohttp` to use osuapi.AHConenctor")
 
 try:
     import requests
+    import time
 
     class ReqConnector:
         """Connector implementation using requests."""
@@ -69,7 +80,7 @@ try:
         def close(self):
             self.sess.close()
 
-        def process_request(self, endpoint, data, type_):
+        def process_request(self, endpoint, data, type_, retries=5):
             """Make and process the request.
 
             Parameters
@@ -81,12 +92,19 @@ try:
             type_ : `type`
                 A converter to which to pass the response json and return.
             """
-            resp = self.sess.get(endpoint, params=data)
-            if resp.status_code != 200:
-                raise HTTPError(resp.status_code, resp.reason, resp.text)
-            data = resp.json()
-            resp.close()
-            return type_(data)
+            while retries:
+                try:
+                    resp = self.sess.get(endpoint, params=data)
+                    if resp.status_code == 200:
+                        return type_(resp.json())
+                    elif resp.status_code == 504 and retries:
+                        retries -= 1
+                        time.sleep(1)
+                    else:
+                        break
+                finally:
+                    resp.close()
+            raise HTTPError(resp.status_code, resp.reason, resp.text)
 except ImportError:
     ReqConnector = _bad_import_class(
         "You need to install `requests` to use osuapi.ReqConnector")
