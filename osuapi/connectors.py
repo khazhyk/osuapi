@@ -23,10 +23,6 @@ try:
             self.sess = sess or aiohttp.ClientSession(loop=self.loop)
             self.closed = False
 
-        def __del__(self):
-            if not self.closed:
-                self.close()
-
         def close(self):
             self.closed = True
             self.sess.close()

@@ -24,9 +24,6 @@ class OsuApi:
         self.connector = connector
         self.key = key
 
-    def __del__(self):
-        self.close()
-
     def close(self):
         self.connector.close()
 
