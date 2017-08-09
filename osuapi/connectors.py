@@ -74,9 +74,6 @@ try:
         def __init__(self, sess=None):
             self.sess = sess or requests.Session()
 
-        def __del__(self):
-            self.close()
-
         def close(self):
             self.sess.close()
 
