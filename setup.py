@@ -8,7 +8,7 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 with open('README.md') as readme_md:
-    readme = pypandoc.convert_text(readme_md.read(), 'md', 'rst')
+    readme = pypandoc.convert_text(readme_md.read(), 'rst', 'markdown')
 
 setup(
     name=name,
