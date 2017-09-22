@@ -1,14 +1,18 @@
 from setuptools import setup, find_packages
 import os
 from osuapi import __version__ as version, __title__ as name, __author__ as author, __license__ as license
-import pypandoc
 
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-with open('README.md') as readme_md:
-    readme = pypandoc.convert_text(readme_md.read(), 'rst', 'markdown')
+try:
+    import pypandoc
+except ImportError:
+    readme = None
+else:
+    with open('README.md') as readme_md:
+        readme = pypandoc.convert_text(readme_md.read(), 'rst', 'markdown')
 
 setup(
     name=name,
