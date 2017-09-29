@@ -8,11 +8,10 @@ def read(fname):
 
 try:
     import pypandoc
-except ImportError:
-    readme = None
-else:
     with open('README.md') as readme_md:
         readme = pypandoc.convert_text(readme_md.read(), 'rst', 'markdown')
+except:
+    readme = None
 
 setup(
     name=name,
