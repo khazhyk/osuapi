@@ -27,7 +27,7 @@ class OsuApiTest(unittest.TestCase):
         self.api.close()
 
     def test_get_user(self):
-        res = self.api.get_user("khazhyk")
+        res = self.api.get_user("cookiezi")
 
         for k, v in dict(res[0]).items():
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
@@ -39,7 +39,7 @@ class OsuApiTest(unittest.TestCase):
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
 
     def test_get_user_recent(self):
-        res = self.api.get_user_recent("khazhyk")
+        res = self.api.get_user_recent("cookiezi")
 
         for k, v in dict(res[0]).items():
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
@@ -71,7 +71,7 @@ class OsuApiAsyncTest(unittest.TestCase):
 
     @async_test
     async def test_get_user(self):
-        res = await self.api.get_user("khazhyk")
+        res = await self.api.get_user("cookiezi")
 
         for k, v in dict(res[0]).items():
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
@@ -85,7 +85,7 @@ class OsuApiAsyncTest(unittest.TestCase):
 
     @async_test
     async def test_get_user_recent(self):
-        res = await self.api.get_user_recent("khazhyk")
+        res = await self.api.get_user_recent("cookiezi")
 
         for k, v in dict(res[0]).items():
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
