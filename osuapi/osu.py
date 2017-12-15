@@ -30,7 +30,7 @@ class OsuApi:
     def _make_req(self, endpoint, data, type_):
         return self.connector.process_request(endpoint, {k: v for k, v in data.items() if v is not None}, type_)
 
-    def get_user(self, username, *, mode=OsuMode.osu):
+    def get_user(self, username, *, mode=OsuMode.osu, event_days=31):
         """Get a user profile.
 
         Parameters
@@ -39,13 +39,23 @@ class OsuApi:
             A `str` representing the user's username, or an `int` representing the user's id.
         mode : :class:`osuapi.enums.OsuMode`
             The osu! game mode for which to look up. Defaults to osu!standard.
+        event_days : int
+            The number of days in the past to look for events. Defaults to 31 (the maximum).
         """
-        return self._make_req(endpoints.USER, dict(
+        resp = self._make_req(endpoints.USER, dict(
             k=self.key,
             u=username,
             type=_username_type(username),
-            m=mode.value
+            m=mode.value,
+            event_days=event_days
             ), JsonList(User))
+
+        for user in resp:
+            for event in user.events:
+                for k in ["beatmap_id", "beatmapset_id", "epicfactor"]:
+                    event[k] = int(event[k])
+
+        return resp
 
     def get_user_best(self, username, *, mode=OsuMode.osu, limit=50):
         """Get a user's best scores.

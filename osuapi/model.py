@@ -201,8 +201,8 @@ class User(AttributeModel):
         Country the user is registered to.
     pp_country_rank : int
         Country ranking place.
-    events : list[str]
-        HTML snippets of recent "interesting" events.
+    events : list[dict]
+        Information about recent "interesting" events.
 
     See Also
     ---------
@@ -226,7 +226,7 @@ class User(AttributeModel):
     count_rank_a = Attribute(Nullable(int))
     country = Attribute(str)
     pp_country_rank = Attribute(int)
-    events = Attribute(JsonList(str))
+    events = Attribute(JsonList(dict))
 
     @property
     def total_hits(self):
