@@ -23,6 +23,9 @@ class OsuApiTest(unittest.TestCase):
             connector=osuapi.ReqConnector())
         warnings.simplefilter("error")
 
+    def tearDown(self):
+        self.api.close()
+
     def test_get_user(self):
         res = self.api.get_user("khazhyk")
 
@@ -62,6 +65,9 @@ class OsuApiAsyncTest(unittest.TestCase):
             connector=osuapi.AHConnector())
         # aiohttp can't decide if close() is a coro or not
         warnings.simplefilter("ignore")
+
+    def tearDown(self):
+        self.api.close()
 
     @async_test
     async def test_get_user(self):
