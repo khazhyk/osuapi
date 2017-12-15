@@ -42,20 +42,13 @@ class OsuApi:
         event_days : int
             The number of days in the past to look for events. Defaults to 31 (the maximum).
         """
-        resp = self._make_req(endpoints.USER, dict(
+        return self._make_req(endpoints.USER, dict(
             k=self.key,
             u=username,
             type=_username_type(username),
             m=mode.value,
             event_days=event_days
             ), JsonList(User))
-
-        for user in resp:
-            for event in user.events:
-                for k in ["beatmap_id", "beatmapset_id", "epicfactor"]:
-                    event[k] = int(event[k])
-
-        return resp
 
     def get_user_best(self, username, *, mode=OsuMode.osu, limit=50):
         """Get a user's best scores.

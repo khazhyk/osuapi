@@ -162,6 +162,33 @@ class BeatmapScore(Score):
         return "<{0.__module__}.BeatmapScore user_id={0.user_id} score_id={0.score_id} date={0.date}>".format(self)
 
 
+class UserEvent(AttributeModel):
+    """Class representing individual user events.
+
+    Attributes
+    -----------
+    display_html : str
+        HTML for the event.
+    beatmap_id : int
+        Beatmap this event occured on.
+    beatmapset_id : int
+        Beatmap set this event occured on.
+    date : datetime
+        Date this event occured.
+    epicfactor : int
+        Epic factor (between 1 and 32)
+    """
+
+    display_html = Attribute(str)
+    beatmap_id = Attribute(int)
+    beatmapset_id = Attribute(int)
+    date = Attribute(DateConverter)
+    epicfactor = Attribute(int)
+
+    def __repr__(self):
+        return "<{0.__module__}.UserEvent beatmap_id={0.beatmap_id} date={0.date} epicfactor={0.epicfactor}>".format(self)
+
+
 class User(AttributeModel):
     """Class representing a user.
 
@@ -226,7 +253,7 @@ class User(AttributeModel):
     count_rank_a = Attribute(Nullable(int))
     country = Attribute(str)
     pp_country_rank = Attribute(int)
-    events = Attribute(JsonList(dict))
+    events = Attribute(JsonList(UserEvent))
 
     @property
     def total_hits(self):
