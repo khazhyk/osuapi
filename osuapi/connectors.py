@@ -31,6 +31,9 @@ try:
         def process_request(self, endpoint, data, type_, retries=5):
             """Make and process the request.
 
+            This can raise anything aiohttp.get() can raise, or
+            osuapi.HTTPError if we run out of retries.
+
             Parameters
             -----------
             endpoint : `str`
@@ -42,8 +45,8 @@ try:
             """
 
             while retries:
+                resp = yield from self.sess.get(endpoint, params=data)
                 try:
-                    resp = yield from self.sess.get(endpoint, params=data)
                     if resp.status == 200:
                         data = yield from resp.json()
                         return type_(data)
@@ -76,6 +79,9 @@ try:
         def process_request(self, endpoint, data, type_, retries=5):
             """Make and process the request.
 
+            This can raise anything requests.get() can raise, or
+            osuapi.HTTPError if we run out of retries.
+
             Parameters
             -----------
             endpoint : `str`
@@ -86,8 +92,8 @@ try:
                 A converter to which to pass the response json and return.
             """
             while retries:
+                resp = self.sess.get(endpoint, params=data)
                 try:
-                    resp = self.sess.get(endpoint, params=data)
                     if resp.status_code == 200:
                         return type_(resp.json())
                     elif resp.status_code == 504 and retries:
