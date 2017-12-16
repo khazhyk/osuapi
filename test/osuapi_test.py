@@ -50,6 +50,13 @@ class OsuApiTest(unittest.TestCase):
         for k, v in dict(res[0]).items():
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
 
+    def test_get_loved_scores(self):
+        res = self.api.get_scores(1343925, username="WubWoofWolf")
+
+        for k, v in dict(res[0]).items():
+            self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
+
+
     def test_get_beatmaps(self):
         res = self.api.get_beatmaps(limit=1)
 
@@ -93,6 +100,13 @@ class OsuApiAsyncTest(unittest.TestCase):
     @async_test
     async def test_get_scores(self):
         res = await self.api.get_scores(774965, username="cookiezi")
+
+        for k, v in dict(res[0]).items():
+            self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
+
+    @async_test
+    async def test_get_loved_scores(self):
+        res = await self.api.get_scores(1343925, username="WubWoofWolf")
 
         for k, v in dict(res[0]).items():
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
