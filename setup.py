@@ -11,6 +11,7 @@ try:
     with open('README.md') as readme_md:
         readme = pypandoc.convert_text(readme_md.read(), 'rst', 'markdown')
 except:
+    print("WARNING: Did not create pypi readme")
     readme = None
 
 setup(
