@@ -112,7 +112,7 @@ class OsuApi:
             u=username,
             type=_username_type(username),
             m=mode.value,
-            mods=mods and mods.value,
+            mods=mods.value if mods else None,
             limit=limit), JsonList(BeatmapScore))
 
     def get_beatmaps(self, *, since=None, beatmapset_id=None, beatmap_id=None, username=None, mode=OsuMode.osu,

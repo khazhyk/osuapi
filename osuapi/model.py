@@ -110,8 +110,8 @@ class SoloScore(Score):
     -----------
     beatmap_id : int
         Beatmap the score is for.
-    pp : float
-        How much PP the score is worth
+    pp : Optional[float]
+        How much PP the score is worth, or None if not eligible for PP.
     enabled_mods : :class:`osuapi.enums.OsuMod`
         Enabled modifiers
     date : datetime
@@ -122,7 +122,7 @@ class SoloScore(Score):
     <https://osu.ppy.sh/wiki/Score>
     """
     beatmap_id = Attribute(str)
-    pp = Attribute(float)
+    pp = Attribute(Nullable(float))
     enabled_mods = Attribute(PreProcessInt(OsuMod))
     date = Attribute(DateConverter)
 
@@ -139,8 +139,8 @@ class BeatmapScore(Score):
     -----------
     username : str
         Name of user.
-    pp : float
-        How much PP the score is worth
+    pp : Optional[float]
+        How much PP the score is worth, or None if not eligible for PP.
     enabled_mods : :class:`osuapi.enums.OsuMod`
         Enabled modifiers
     date : datetime
@@ -153,7 +153,7 @@ class BeatmapScore(Score):
     <https://osu.ppy.sh/wiki/Score>
     """
     username = Attribute(str)
-    pp = Attribute(float)
+    pp = Attribute(Nullable(float))
     enabled_mods = Attribute(PreProcessInt(OsuMod))
     date = Attribute(DateConverter)
     score_id = Attribute(int)
