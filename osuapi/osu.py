@@ -115,7 +115,7 @@ class OsuApi:
             mods=mods.value if mods else None,
             limit=limit), JsonList(BeatmapScore))
 
-    def get_beatmaps(self, *, since=None, beatmapset_id=None, beatmap_id=None, username=None, mode=OsuMode.osu,
+    def get_beatmaps(self, *, since=None, beatmapset_id=None, beatmap_id=None, username=None, mode=None,
                      include_converted=False, beatmap_hash=None, limit=500):
         """Get beatmaps.
 
@@ -131,7 +131,7 @@ class OsuApi:
             A `str` representing the user's username, or an `int` representing the user's id.
             If specified, restrict results to a specific user.
         mode : :class:`osuapi.enums.OsuMode`
-            The osu! game mode for which to look up. Defaults to osu!standard.
+            If specified, restrict results to a specific osu! game mode.
         include_converted : bool
             Whether or not to include autoconverts. Defaults to false.
         beatmap_hash
@@ -146,7 +146,7 @@ class OsuApi:
             u=username,
             since="{:%Y-%m-%d %H:%M:%S}".format(since) if since is not None else None,
             type=_username_type(username),
-            m=mode.value,
+            m=mode.value if mode else None,
             a=int(include_converted),
             h=beatmap_hash,
             limit=limit
