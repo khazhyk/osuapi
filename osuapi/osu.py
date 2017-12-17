@@ -131,7 +131,7 @@ class OsuApi:
             A `str` representing the user's username, or an `int` representing the user's id.
             If specified, restrict results to a specific user.
         mode : :class:`osuapi.enums.OsuMode`
-            The osu! game mode for which to look up. Defaults to any.
+            If specified, restrict results to a specific osu! game mode.
         include_converted : bool
             Whether or not to include autoconverts. Defaults to false.
         beatmap_hash
