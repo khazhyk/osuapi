@@ -121,7 +121,7 @@ class SoloScore(Score):
     ---------
     <https://osu.ppy.sh/wiki/Score>
     """
-    beatmap_id = Attribute(str)
+    beatmap_id = Attribute(int)
     pp = Attribute(Nullable(float))
     enabled_mods = Attribute(PreProcessInt(OsuMod))
     date = Attribute(DateConverter)
