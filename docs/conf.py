@@ -26,7 +26,7 @@ on_rtd = os.getenv('READTHEDOCS') == 'True'
 #sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('..'))
 
-MOCK_MODULES = ['aiohttp', 'requests']
+MOCK_MODULES = ['aiohttp']
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 # -- General configuration ------------------------------------------------
