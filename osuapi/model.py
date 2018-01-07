@@ -218,8 +218,12 @@ class User(AttributeModel):
         User's performance points
     accuracy : float
         Weighted average of accuracy on top plays.
+    count_rank_ssh : int
+        Career total of SSH ranks.
     count_rank_ss : int
         Career total of SS ranks.
+    count_rank_sh : int
+        Career total of SH ranks.
     count_rank_s : int
         Career total of S ranks.
     count_rank_a : int
@@ -248,7 +252,9 @@ class User(AttributeModel):
     level = Attribute(Nullable(float))
     pp_raw = Attribute(Nullable(float))
     accuracy = Attribute(Nullable(float))
+    count_rank_ssh = Attribute(Nullable(int))
     count_rank_ss = Attribute(Nullable(int))
+    count_rank_sh = Attribute(Nullable(int))
     count_rank_s = Attribute(Nullable(int))
     count_rank_a = Attribute(Nullable(int))
     country = Attribute(str)
