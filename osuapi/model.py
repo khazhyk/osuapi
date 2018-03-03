@@ -44,7 +44,7 @@ class Score(AttributeModel):
     countmiss = Attribute(int)
     countkatu = Attribute(int)
     countgeki = Attribute(int)
-    perfect = Attribute(bool)
+    perfect = Attribute(PreProcessInt(bool))
     user_id = Attribute(int)
     rank = Attribute(str)
 
