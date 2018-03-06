@@ -69,7 +69,7 @@ class TeamScore(Score):
     """
     slot = Attribute(int)
     team = Attribute(int)
-    passed = Attribute(bool, name="pass")
+    passed = Attribute(PreProcessInt(bool), name="pass")
 
     def __repr__(self):
         return "<{0.__module__}.TeamScore user_id={0.user_id} team={0.team}>".format(self)
@@ -277,7 +277,7 @@ class Beatmap(AttributeModel):
 
     Attributes
     -----------
-    approved : bool
+    approved : BeatmapStatus
         Whether or not the map has been ranked.
     approved_date : Optional[datetime]
         When the beatmap was ranked, or None.
