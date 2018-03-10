@@ -147,6 +147,8 @@ class BeatmapScore(Score):
         When the score was played.
     score_id : int
         ID of score.
+    replay_available : bool
+        If a replay is available.
 
     See Also
     ---------
@@ -157,6 +159,7 @@ class BeatmapScore(Score):
     enabled_mods = Attribute(PreProcessInt(OsuMod))
     date = Attribute(DateConverter)
     score_id = Attribute(int)
+    replay_available = Attribute(PreProcessInt(bool))
 
     def __repr__(self):
         return "<{0.__module__}.BeatmapScore user_id={0.user_id} score_id={0.score_id} date={0.date}>".format(self)
