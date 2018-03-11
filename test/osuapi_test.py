@@ -39,7 +39,12 @@ class OsuApiTest(unittest.TestCase):
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
 
     def test_get_user_recent(self):
-        res = self.api.get_user_recent("cookiezi")
+        for usr in ["cookiezi", "filsdelama", "Vaxei", "WubWoofWolf", "Azer"]:
+            res = self.api.get_user_recent(usr)
+            if res:
+                break
+        if not res:
+            self.skipTest("No one plays this game anymore.")
 
         for k, v in dict(res[0]).items():
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
@@ -92,7 +97,12 @@ class OsuApiAsyncTest(unittest.TestCase):
 
     @async_test
     async def test_get_user_recent(self):
-        res = await self.api.get_user_recent("cookiezi")
+        for usr in ["cookiezi", "filsdelama", "Vaxei", "WubWoofWolf", "Azer"]:
+            res = await self.api.get_user_recent(usr)
+            if res:
+                break
+        if not res:
+            self.skipTest("No one plays this game anymore.")
 
         for k, v in dict(res[0]).items():
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
