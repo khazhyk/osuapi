@@ -8,6 +8,11 @@ def _username_type(username):
         return None
     return "id" if isinstance(username, int) else "string"
 
+
+class _MaxLimit:
+    pass
+
+
 class OsuApi:
     """osu! api client.
 
@@ -18,11 +23,17 @@ class OsuApi:
     connector
         The osuapi connector used for making requests. The library comes with
         two implementations, :class:`osuapi.connectors.AHConnector` for using aiohttp, and
-        :class:`osuapi.connectors.ReqConnector` for using requests."""
+        :class:`osuapi.connectors.ReqConnector` for using requests.
+
+
+    The client also has a ``max_limit`` attribute, which can be passed as the
+    ``limit`` keyword to instance methods to use the maximum value for that
+    particular endpoint."""
 
     def __init__(self, key, *, connector):
         self.connector = connector
         self.key = key
+        self.max_limit = _MaxLimit()
 
     def close(self):
         self.connector.close()
@@ -42,6 +53,9 @@ class OsuApi:
         event_days : int
             The number of days in the past to look for events. Defaults to 31 (the maximum).
         """
+        if event_days == self.max_limit:
+            event_days = 31
+
         return self._make_req(endpoints.USER, dict(
             k=self.key,
             u=username,
@@ -62,6 +76,9 @@ class OsuApi:
         limit
             The maximum number of results to return. Defaults to 50, maximum 100.
         """
+        if limit == self.max_limit:
+            limit = 100
+
         return self._make_req(endpoints.USER_BEST, dict(
             k=self.key,
             u=username,
@@ -106,6 +123,9 @@ class OsuApi:
         limit
             Number of results to return. Defaults to 50, maximum 100.
         """
+        if limit == self.max_limit:
+            limit = 100
+
         return self._make_req(endpoints.SCORES, dict(
             k=self.key,
             b=beatmap_id,
@@ -139,6 +159,9 @@ class OsuApi:
         limit
             Number of results to return. Defaults to 500, maximum 500.
         """
+        if limit == self.max_limit:
+            limit = 500
+
         return self._make_req(endpoints.BEATMAPS, dict(
             k=self.key,
             s=beatmapset_id,
