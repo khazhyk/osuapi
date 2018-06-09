@@ -172,10 +172,10 @@ class UserEvent(AttributeModel):
     -----------
     display_html : str
         HTML for the event.
-    beatmap_id : int
-        Beatmap this event occured on.
-    beatmapset_id : int
-        Beatmap set this event occured on.
+    beatmap_id : Optional[int]
+        Beatmap this event occured on, or None if the event has no beatmap.
+    beatmapset_id : Optional[int]
+        Beatmap set this event occured on, or None if the event has no beatmap.
     date : datetime
         Date this event occured.
     epicfactor : int
@@ -183,8 +183,8 @@ class UserEvent(AttributeModel):
     """
 
     display_html = Attribute(str)
-    beatmap_id = Attribute(int)
-    beatmapset_id = Attribute(int)
+    beatmap_id = Attribute(Nullable(int))
+    beatmapset_id = Attribute(Nullable(int))
     date = Attribute(DateConverter)
     epicfactor = Attribute(int)
 
