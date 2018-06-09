@@ -39,7 +39,7 @@ class OsuApiTest(unittest.TestCase):
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
 
     def test_get_user_recent(self):
-        for usr in ["cookiezi", "filsdelama", "Vaxei", "WubWoofWolf", "Azer"]:
+        for usr in ["cookiezi", "filsdelama", "Vaxei", 39828, "Azer"]:
             res = self.api.get_user_recent(usr)
             if res:
                 break
@@ -56,7 +56,7 @@ class OsuApiTest(unittest.TestCase):
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
 
     def test_get_loved_scores(self):
-        res = self.api.get_scores(1343925, username="WubWoofWolf")
+        res = self.api.get_scores(1343925, username=39828)
 
         for k, v in dict(res[0]).items():
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
@@ -97,7 +97,7 @@ class OsuApiAsyncTest(unittest.TestCase):
 
     @async_test
     async def test_get_user_recent(self):
-        for usr in ["cookiezi", "filsdelama", "Vaxei", "WubWoofWolf", "Azer"]:
+        for usr in ["cookiezi", "filsdelama", "Vaxei", 39828, "Azer"]:
             res = await self.api.get_user_recent(usr)
             if res:
                 break
@@ -116,7 +116,7 @@ class OsuApiAsyncTest(unittest.TestCase):
 
     @async_test
     async def test_get_loved_scores(self):
-        res = await self.api.get_scores(1343925, username="WubWoofWolf")
+        res = await self.api.get_scores(1343925, username=39828)
 
         for k, v in dict(res[0]).items():
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
