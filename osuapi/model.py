@@ -14,17 +14,28 @@ class Score(AttributeModel):
     maxcombo : int
         Largest combo achieved
     count50 : int
-        Number of "50" hits
+        Number of "50" hits.
+        In catch: number of "droplet" hits
     count100 : int
         Number of "100" hits
+        In taiko: number of "good" hits
+        In catch: number of "drop" hits
     count300 : int
         Number of "300" hits
+        In taiko: number of "great" hits
+        In catch: number of "fruit" hits
     countmiss : int
         Number of misses
+        In catch: number of "fruit" or "drop" misses
     countkatu : int
         Number of "katu" sections (only 100s and 300s)
+        In taiko: number of "double good" hits
+        In mania: number of "200" hits
+        In catch: number of "droplet" misses
     countgeki : int
         Number of "geki" sections (only 300s)
+        In taiko: number of "double great" hits
+        In mania: number of "rainbow 300" hits
     perfect : bool
         If the play is a full combo (maxcombo is maximal)
     user_id : int
@@ -47,6 +58,30 @@ class Score(AttributeModel):
     perfect = Attribute(PreProcessInt(bool))
     user_id = Attribute(int)
     rank = Attribute(str)
+
+    def accuracy(self, mode: OsuMode):
+        """Calculated accuracy.
+
+        See Also
+        --------
+        <https://osu.ppy.sh/help/wiki/Accuracy>
+        """
+        if mode is OsuMode.osu:
+            return (
+                (6 * self.count300 + 2 * self.count100 + self.count50) /
+                (6 * (self.count300 + self.count100 + self.count50 + self.countmiss)))
+        if mode is OsuMode.taiko:
+            return (
+                (self.count300 + self.countgeki + (0.5*(self.count100 + self.countkatu))) /
+                (self.count300 + self.countgeki + self.count100 + self.countkatu + self.countmiss))
+        if mode is OsuMode.mania:
+            return (
+                (6 * (self.countgeki + self.count300) + 4 * self.countkatu + 2 * self.count100 + self.count50) /
+                (6 * (self.countgeki + self.count300 + self.countkatu + self.count100 + self.count50 + self.countmiss)))
+        if mode is OsuMode.ctb:
+            return (
+                (self.count50 + self.count100 + self.count300) /
+                (self.count50 + self.count100 + self.count300 + self.countmiss + self.countkatu))
 
 
 class TeamScore(Score):
