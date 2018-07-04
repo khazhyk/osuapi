@@ -370,6 +370,14 @@ class Beatmap(AttributeModel):
     def __repr__(self):
         return "<{0.__module__}.Beatmap title={0.title} creator={0.creator} id={0.beatmap_id}>".format(self)
 
+    @property
+    def url(self):
+        return "https://osu.ppy.sh/b/{0.beatmap_id}".format(self)
+
+    @property
+    def set_url(self):
+        return "https://osu.ppy.sh/s/{0.beatmapset_id}".format(self)
+
 
 class MatchMetadata(AttributeModel):
     """Class representing info about a match.
