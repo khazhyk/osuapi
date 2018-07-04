@@ -4,6 +4,6 @@ __license__ = "MIT"
 __copyright__ = "Copyright khazhyk"
 __version__ = "0.0.29"
 
-from .osu import OsuApi
-from .connectors import *
-from .enums import *
+# from .osu import OsuApi
+# from .connectors import *
+# from .enums import *

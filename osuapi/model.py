@@ -4,7 +4,7 @@ from .enums import *
 from .dictmodel import AttributeModel, Attribute, JsonList, Nullable, PreProcessInt, DateConverter
 
 
-class Score(AttributeModel):
+class _BaseScore(AttributeModel):
     """Abstract class representing a score.
 
     Attributes
@@ -38,18 +38,78 @@ class Score(AttributeModel):
     """
     score = Attribute(int)
     maxcombo = Attribute(int)
-    count50 = Attribute(int)
-    count100 = Attribute(int)
-    count300 = Attribute(int)
     countmiss = Attribute(int)
-    countkatu = Attribute(int)
-    countgeki = Attribute(int)
     perfect = Attribute(PreProcessInt(bool))
     user_id = Attribute(int)
     rank = Attribute(str)
 
 
-class TeamScore(Score):
+class _StdScore(_BaseScore):
+    """osu!std score."""
+    count50 = Attribute(int)
+    count100 = Attribute(int)
+    count300 = Attribute(int)
+    countkatu = Attribute(int)
+    countgeki = Attribute(int)
+
+    @property
+    def accuracy(self):
+        """Accuracy of this osu!std score."""
+        return (
+            (6 * self.count300 + 2 * self.count100 + self.count50) /
+            (6 * (self.count300 + self.count100 + self.count50 + self.countmiss)))
+
+
+class _TaikoScore(_BaseScore):
+    """osu!taiko score."""
+    _unused_1 = Attribute(int, name="count50")
+    countgood = Attribute(int, name="count100")
+    countdoublegood = Attribute(int, name="countkatu")
+    countgreat = Attribute(int, name="count300")
+    countdoublegreat = Attribute(int, name="countgeki")
+
+    @property
+    def accuracy(self):
+        """Accuracy of this osu!taiko score."""
+        return (((self.countgreat + self.countdoublegreat) + (0.5*(self.countgood + self.countdoublegood))) /
+            (self.countgreat+self.countdoublegreat + self.countgood+self.countdoublegood +self.countmiss))
+
+
+class _ManiaScore(_BaseScore):
+    """osu!mania score."""
+    count50 = Attribute(int)
+    count100 = Attribute(int)
+    count200 = Attribute(int, name="countkatu")
+    count300 = Attribute(int)
+    countrainbow300 = Attribute(int, name="countgeki")
+
+    @property
+    def accuracy(self):
+        """Accuracy of this osu!mania score."""
+        return (
+            (6 * self.countrainbow300 + 6 * self.count300 + 4 * self.count200 +
+             2 * self.count100 + self.count50) /
+            (6 * (self.countrainbow300 + self.count300 + self.count200 +
+                  self.count100 + self.count50 + self.countmiss)))
+
+
+class _CatchScore(_BaseScore):
+    """osu!catch score."""
+    countdroplets = Attribute(int, name="count50")
+    countmisseddroplets = Attribute(int, name="countkatu")
+    countdrops = Attribute(int, name="count100")
+    countfruits = Attribute(int, name="count300")
+    countgeki = Attribute(int)
+
+    @property
+    def accuracy(self):
+        """Accuracy of this osu!catch score."""
+        return ((self.countdroplets + self.countticks + self.countfruits) /
+            (self.countdroplets + self.countticks + self.countfruits + self.countmiss + self.countmisseddroplets)
+            )
+
+
+class _TeamScore(AttributeModel):
     """Class representing a score in a multiplayer team game.
 
     See :class:`Score`
@@ -75,7 +135,7 @@ class TeamScore(Score):
         return "<{0.__module__}.TeamScore user_id={0.user_id} team={0.team}>".format(self)
 
 
-class RecentScore(Score):
+class _RecentScore(AttributeModel):
     """Class representing a recent score.
 
     See :class:`Score`
@@ -101,7 +161,7 @@ class RecentScore(Score):
         return "<{0.__module__}.SoloScore user_id={0.user_id} beatmap_id={0.beatmap_id} date={0.date}>".format(self)
 
 
-class SoloScore(Score):
+class _SoloScore(AttributeModel):
     """Class representing a score in singleplayer.
 
     See :class:`Score`
@@ -130,7 +190,7 @@ class SoloScore(Score):
         return "<{0.__module__}.SoloScore user_id={0.user_id} beatmap_id={0.beatmap_id} date={0.date}>".format(self)
 
 
-class BeatmapScore(Score):
+class _BeatmapScore(AttributeModel):
     """Class representing a score attached to a beatmap.
 
     See :class:`Score`
@@ -163,6 +223,11 @@ class BeatmapScore(Score):
 
     def __repr__(self):
         return "<{0.__module__}.BeatmapScore user_id={0.user_id} score_id={0.score_id} date={0.date}>".format(self)
+
+for _mode_score in [_StdScore, _TaikoScore, _ManiaScore, _CatchScore]:
+    for _endpoint_score in [_TeamScore, _RecentScore, _SoloScore, _BeatmapScore]:
+        _new_cls_name = _mode_score.__name__[1:-5] + _endpoint_score.__name__[1:]
+        globals()[_new_cls_name] = type(_new_cls_name, (_mode_score, _endpoint_score), {})
 
 
 class UserEvent(AttributeModel):
