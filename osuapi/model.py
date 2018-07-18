@@ -331,6 +331,8 @@ class Beatmap(AttributeModel):
         Speed of map in beats per minute.
     creator : str
         Username of map creator.
+    creator_id: int
+        ID of the map creator.
     difficultyrating : float
         Star rating of a map.
     diff_size : float
@@ -382,6 +384,7 @@ class Beatmap(AttributeModel):
     beatmapset_id = Attribute(int)
     bpm = Attribute(float)
     creator = Attribute(str)
+    creator_id = Attribute(int)
     difficultyrating = Attribute(float)
     diff_size = Attribute(float)
     diff_overall = Attribute(float)
