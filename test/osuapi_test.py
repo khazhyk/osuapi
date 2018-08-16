@@ -15,6 +15,15 @@ def async_test(f):
     return wrapper
 
 
+class OsuModTest(unittest.TestCase):
+
+    def test_perfect(self):
+        self.assertEqual((osuapi.OsuMod.Perfect | osuapi.OsuMod.SuddenDeath).shortname, "PF")
+
+    def test_nightcore(self):
+        self.assertEqual((osuapi.OsuMod.Nightcore | osuapi.OsuMod.DoubleTime).shortname, "NC")
+
+
 class OsuApiTest(unittest.TestCase):
 
     def setUp(self):

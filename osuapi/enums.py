@@ -58,7 +58,7 @@ class OsuMod(Flags):
     Autoplay = 2048
     SpunOut = 4096, "SO"
     Autopilot = 8192, "AP"  # Called Relax2 on osu api documentation
-    Perfect = 16384, "PF"
+    Perfect = 16384, "PF"  # Only set along with SuddenDeth. i.e: PF only gives 16416
     Key4 = 32768, "4K"
     Key5 = 65536, "5K"
     Key6 = 131072, "6K"
@@ -82,10 +82,12 @@ class OsuMod(Flags):
 
     @property
     def _flags_clean_nightcore(self):
+        value = self.value
         if OsuMod.Nightcore in self:
-            yield from OsuMod(self.value & ~OsuMod.DoubleTime.value).enabled_flags
-        else:
-            yield from self.enabled_flags
+            value &= ~OsuMod.DoubleTime.value
+        if OsuMod.Perfect in self:
+            value &= ~OsuMod.SuddenDeath.value
+        yield from OsuMod(value).enabled_flags
 
     @property
     def shortname(self):
