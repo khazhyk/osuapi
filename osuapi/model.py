@@ -254,6 +254,8 @@ class User(AttributeModel):
         User's level
     pp_raw: float
         User's performance points
+    total_seconds_played: int
+        User's total playtime
     accuracy : float
         Weighted average of accuracy on top plays.
     count_rank_ssh : int
@@ -289,6 +291,7 @@ class User(AttributeModel):
     pp_rank = Attribute(Nullable(int))
     level = Attribute(Nullable(float))
     pp_raw = Attribute(Nullable(float))
+    total_seconds_played = Attribute(Nullable(int))
     accuracy = Attribute(Nullable(float))
     count_rank_ssh = Attribute(Nullable(int))
     count_rank_ss = Attribute(Nullable(int))
