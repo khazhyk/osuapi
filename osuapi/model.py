@@ -270,6 +270,8 @@ class User(AttributeModel):
         Career total of A ranks.
     country : str
         Country the user is registered to.
+    total_seconds_played : int
+        Total amount of seconds played
     pp_country_rank : int
         Country ranking place.
     events : list[dict]
@@ -299,6 +301,7 @@ class User(AttributeModel):
     count_rank_s = Attribute(Nullable(int))
     count_rank_a = Attribute(Nullable(int))
     country = Attribute(str)
+    total_seconds_played = Attribute(int)
     pp_country_rank = Attribute(int)
     events = Attribute(JsonList(UserEvent))
 
