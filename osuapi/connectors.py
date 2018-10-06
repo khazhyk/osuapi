@@ -59,9 +59,10 @@ try:
                     else:
                         break
                 finally:
+                    if not retries:
+                        error_text = yield from resp.text()
                     resp.close()
-            raise HTTPError(resp.status, resp.reason,
-                            (yield from resp.text()))
+            raise HTTPError(resp.status, resp.reason, error_text)
 except ImportError:
     AHConnector = _bad_import_class(
         "You need to install `aiohttp` to use osuapi.AHConenctor")
