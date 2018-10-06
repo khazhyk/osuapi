@@ -42,6 +42,8 @@ try:
                 The parameters for making the HTTP request
             type_ : `type`
                 A converter to which to pass the response json and return.
+            retries: `int`
+                Maximum number of times to try request.
             """
 
             while retries:
@@ -50,7 +52,7 @@ try:
                     if resp.status == 200:
                         data = yield from resp.json()
                         return type_(data)
-                    elif resp.status == 504 and retries:
+                    elif resp.status == 504:
                         # Retry on 504
                         retries -= 1
                         yield from asyncio.sleep(1)
@@ -90,13 +92,15 @@ try:
                 The parameters for making the HTTP request
             type_ : `type`
                 A converter to which to pass the response json and return.
+            retries: `int`
+                Maximum number of times to try request.
             """
             while retries:
                 resp = self.sess.get(endpoint, params=data)
                 try:
                     if resp.status_code == 200:
                         return type_(resp.json())
-                    elif resp.status_code == 504 and retries:
+                    elif resp.status_code == 504:
                         retries -= 1
                         time.sleep(1)
                     else:
