@@ -7,3 +7,4 @@ __version__ = "0.0.31"
 from .osu import OsuApi
 from .connectors import *
 from .enums import *
+from .errors import *
