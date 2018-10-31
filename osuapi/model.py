@@ -301,6 +301,7 @@ class User(AttributeModel):
     country = Attribute(str)
     pp_country_rank = Attribute(int)
     events = Attribute(JsonList(UserEvent))
+    join_date = Attribute(DateConverter)
 
     @property
     def total_hits(self):
