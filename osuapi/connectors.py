@@ -59,7 +59,7 @@ try:
                     else:
                         break
                 finally:
-                    if not retries:
+                    if not retries or resp.status not in {200, 504}:
                         error_text = yield from resp.text()
                     resp.close()
             raise HTTPError(resp.status, resp.reason, error_text)

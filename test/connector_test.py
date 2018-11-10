@@ -1,6 +1,7 @@
 import asyncio
 import http
 import multiprocessing
+import os
 import unittest
 import warnings
 
@@ -18,7 +19,7 @@ def async_test(f):
 class FiveOhFourHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
-        self.send_error(504, "FiveOhFour")
+        self.send_error(int(os.path.split(self.path)[1]), "FiveOhFour")
 
 
 def run_504_server():
@@ -42,9 +43,15 @@ class AHConnectorTest(unittest.TestCase):
 
     @async_test
     async def test_fail_correctly_out_of_retries(self):
-        with self.assertRaises(osuapi.HTTPError):
+        with self.assertRaisesRegex(osuapi.HTTPError, ".*504.*"):
             res = await self.connector.process_request(
                 "http://localhost:6969/504", {}, int, retries=3)
+
+    @async_test
+    async def test_fail_correctly(self):
+        with self.assertRaisesRegex(osuapi.HTTPError, ".*500.*"):
+            res = await self.connector.process_request(
+                "http://localhost:6969/500", {}, int, retries=3)
 
 
 class ReqConnectorTest(unittest.TestCase):
@@ -59,6 +66,11 @@ class ReqConnectorTest(unittest.TestCase):
         self.connector.close()
 
     def test_fail_correctly_out_of_retries(self):
-        with self.assertRaises(osuapi.HTTPError):
+        with self.assertRaisesRegex(osuapi.HTTPError, ".*504.*"):
             res = self.connector.process_request(
                 "http://localhost:6969/504", {}, int, retries=3)
+
+    def test_fail_correctly(self):
+        with self.assertRaisesRegex(osuapi.HTTPError, ".*500.*"):
+            res = self.connector.process_request(
+                "http://localhost:6969/500", {}, int, retries=3)
