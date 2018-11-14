@@ -36,7 +36,7 @@ class OsuApiTest(unittest.TestCase):
         self.api.close()
 
     def test_get_user(self):
-        res = self.api.get_user("cookiezi")
+        res = self.api.get_user(124493)
 
         for k, v in dict(res[0]).items():
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
@@ -48,7 +48,7 @@ class OsuApiTest(unittest.TestCase):
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
 
     def test_get_user_recent(self):
-        for usr in ["cookiezi", "filsdelama", "Vaxei", 39828, "Azer"]:
+        for usr in [124493, "filsdelama", "Vaxei", 39828, "Azer"]:
             res = self.api.get_user_recent(usr)
             if res:
                 break
@@ -59,7 +59,7 @@ class OsuApiTest(unittest.TestCase):
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
 
     def test_get_scores(self):
-        res = self.api.get_scores(774965, username="cookiezi")
+        res = self.api.get_scores(774965, username=124493)
 
         for k, v in dict(res[0]).items():
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
@@ -92,7 +92,7 @@ class OsuApiAsyncTest(unittest.TestCase):
 
     @async_test
     async def test_get_user(self):
-        res = await self.api.get_user("cookiezi")
+        res = await self.api.get_user(124493)
 
         for k, v in dict(res[0]).items():
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
@@ -106,7 +106,7 @@ class OsuApiAsyncTest(unittest.TestCase):
 
     @async_test
     async def test_get_user_recent(self):
-        for usr in ["cookiezi", "filsdelama", "Vaxei", 39828, "Azer"]:
+        for usr in [124493, "filsdelama", "Vaxei", 39828, "Azer"]:
             res = await self.api.get_user_recent(usr)
             if res:
                 break
@@ -118,7 +118,7 @@ class OsuApiAsyncTest(unittest.TestCase):
 
     @async_test
     async def test_get_scores(self):
-        res = await self.api.get_scores(774965, username="cookiezi")
+        res = await self.api.get_scores(774965, username=124493)
 
         for k, v in dict(res[0]).items():
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
