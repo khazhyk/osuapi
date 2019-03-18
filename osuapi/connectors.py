@@ -15,6 +15,7 @@ def _bad_import_class(msg):
 try:
     import aiohttp
     import asyncio
+    import inspect
 
     class AHConnector:
         """Connector implementation using aiohttp."""
@@ -25,7 +26,13 @@ try:
 
         def close(self):
             self.closed = True
-            self.sess.close()
+            # there is no reason for sess.close to be a coroutine, and
+            # in older versions of aiohttp, it isn't. In newer versions
+            # close returns an awaitable whose only purpose is to warn you
+            # if you don't await it, so... await it... I guess???
+            aiohttp_is_silly = self.sess.close()
+            if inspect.isawaitable(aiohttp_is_silly):
+                asyncio.ensure_future(aiohttp_is_silly)
 
         @asyncio.coroutine
         def process_request(self, endpoint, data, type_, retries=5):
