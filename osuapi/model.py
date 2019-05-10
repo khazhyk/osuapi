@@ -339,6 +339,12 @@ class Beatmap(AttributeModel):
         ID of the map creator.
     difficultyrating : float
         Star rating of a map.
+    diff_aim : float
+        Aim portion of difficulty
+    diff_speed : float
+        Speed portion of difficulty
+    diff_strain : float
+        Strain portion of difficulty
     diff_size : float
         Circle Size. (CS)
     diff_overall : float
@@ -390,6 +396,9 @@ class Beatmap(AttributeModel):
     creator = Attribute(str)
     creator_id = Attribute(int)
     difficultyrating = Attribute(float)
+    diff_aim = Attribute(float)
+    diff_speed = Attribute(float)
+    diff_strain = Attribute(float)
     diff_size = Attribute(float)
     diff_overall = Attribute(float)
     diff_approach = Attribute(float)
