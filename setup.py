@@ -9,8 +9,8 @@ def read(fname):
 try:
     import pypandoc
     with open('README.md') as readme_md:
-        readme = pypandoc.convert_text(readme_md.read(), 'rst', 'markdown')
-except:
+        readme = pypandoc.convert_text(readme_md.read(), 'rst', 'markdown', extra_args=["--eol=lf"])
+except ImportError:
     print("WARNING: Did not create pypi readme")
     readme = None
 
