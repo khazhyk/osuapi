@@ -159,6 +159,7 @@ class SoloScore(Score):
     beatmap_id = Attribute(int)
     pp = Attribute(Nullable(float))
     enabled_mods = Attribute(PreProcessInt(OsuMod))
+    score_id = Attribute(int)
     date = Attribute(DateConverter)
 
     def __repr__(self):
