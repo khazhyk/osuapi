@@ -324,6 +324,8 @@ class Beatmap(AttributeModel):
         Whether or not the map has been ranked.
     approved_date : Optional[datetime]
         When the beatmap was ranked, or None.
+    submit_date : datetime
+        When the beatmap was submitted.
     last_update : datetime
         Last time the map was updated.
     artist : str
@@ -344,8 +346,6 @@ class Beatmap(AttributeModel):
         Aim portion of difficulty
     diff_speed : float
         Speed portion of difficulty
-    diff_strain : float
-        Strain portion of difficulty
     diff_size : float
         Circle Size. (CS)
     diff_overall : float
@@ -376,6 +376,8 @@ class Beatmap(AttributeModel):
         Space delimited tags for the map.
     favourite_count : int
         Number of users that have favorited this map.
+    rating : float
+        Quality rating of this map
     playcount : int
         Number of times this map has been played (including fails)/
     passcount : int
@@ -389,6 +391,7 @@ class Beatmap(AttributeModel):
     """
     approved = Attribute(PreProcessInt(BeatmapStatus))
     approved_date = Attribute(Nullable(DateConverter))
+    submit_date = Attribute(DateConverter)
     last_update = Attribute(DateConverter)
     artist = Attribute(str)
     beatmap_id = Attribute(int)
@@ -399,7 +402,6 @@ class Beatmap(AttributeModel):
     difficultyrating = Attribute(float)
     diff_aim = Attribute(float)
     diff_speed = Attribute(float)
-    diff_strain = Attribute(float)
     diff_size = Attribute(float)
     diff_overall = Attribute(float)
     diff_approach = Attribute(float)
@@ -415,6 +417,7 @@ class Beatmap(AttributeModel):
     mode = Attribute(PreProcessInt(OsuMode))
     tags = Attribute(str)
     favourite_count = Attribute(int)
+    rating = Attribute(float)
     playcount = Attribute(int)
     passcount = Attribute(int)
     max_combo = Attribute(Nullable(int))
