@@ -77,6 +77,13 @@ class OsuApiTest(unittest.TestCase):
         for k, v in dict(res[0]).items():
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
 
+    def test_get_mania_map(self):
+        # https://github.com/khazhyk/osuapi/issues/27
+        res = self.api.get_beatmaps(beatmap_id=975667)
+
+        self.assertTrue(res[0].diff_aim is None, 'diff_aim')
+        self.assertTrue(res[0].diff_speed is None, 'diff_speed')
+
 
 class OsuApiAsyncTest(unittest.TestCase):
 
@@ -136,3 +143,11 @@ class OsuApiAsyncTest(unittest.TestCase):
 
         for k, v in dict(res[0]).items():
             self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
+
+    @async_test
+    async def test_get_mania_map(self):
+        # https://github.com/khazhyk/osuapi/issues/27
+        res = await self.api.get_beatmaps(beatmap_id=975667)
+
+        self.assertTrue(res[0].diff_aim is None, 'diff_aim')
+        self.assertTrue(res[0].diff_speed is None, 'diff_speed')
