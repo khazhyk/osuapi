@@ -165,6 +165,12 @@ class SoloScore(Score):
     def __repr__(self):
         return "<{0.__module__}.SoloScore user_id={0.user_id} beatmap_id={0.beatmap_id} date={0.date}>".format(self)
 
+    def __hash__(self):
+        return hash(self.score_id)
+
+    def __eq__(self, other):
+        return self.score_id == other.score_id
+
 
 class BeatmapScore(Score):
     """Class representing a score attached to a beatmap.
