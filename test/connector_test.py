@@ -29,7 +29,8 @@ def run_504_server():
 
 
 class AHConnectorTest(unittest.TestCase):
-    def setUp(self):
+    @async_test
+    async def setUp(self):
         self.connector = osuapi.AHConnector()
         self.server = multiprocessing.Process(target=run_504_server)
         self.server.daemon = True

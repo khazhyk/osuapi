@@ -87,7 +87,8 @@ class OsuApiTest(unittest.TestCase):
 
 class OsuApiAsyncTest(unittest.TestCase):
 
-    def setUp(self):
+    @async_test
+    async def setUp(self):
         self.api = osuapi.OsuApi(
             key=os.environ['OSU_API_KEY'],
             connector=osuapi.AHConnector())
