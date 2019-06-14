@@ -384,6 +384,16 @@ class Beatmap(AttributeModel):
         Number of times this map has been passed.
     max_combo : Optional[int]
         Maximum possible combo.
+    count_normal : int
+        Number of normal hitobjects
+    count_slider : int
+        Number of sliders
+    count_spinner : int
+        Number of spinners
+    download_unavailable : bool
+        If the download for this beatmap is unavailable (old map, etc.)
+    audio_unavailable : bool
+        If the audio for this beatmap is unavailable (DMCA takedown, etc.)
 
     See Also
     ---------
@@ -420,7 +430,12 @@ class Beatmap(AttributeModel):
     rating = Attribute(float)
     playcount = Attribute(int)
     passcount = Attribute(int)
+    count_normal = Attribute(Nullable(int))
+    count_slider = Attribute(Nullable(int))
+    count_spinner = Attribute(Nullable(int))
     max_combo = Attribute(Nullable(int))
+    download_unavailable = Attribute(PreProcessInt(bool))
+    audio_unavailable = Attribute(PreProcessInt(bool))
 
     def __repr__(self):
         return "<{0.__module__}.Beatmap title={0.title} creator={0.creator} id={0.beatmap_id}>".format(self)
