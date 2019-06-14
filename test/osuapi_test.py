@@ -81,8 +81,25 @@ class OsuApiTest(unittest.TestCase):
         # https://github.com/khazhyk/osuapi/issues/27
         res = self.api.get_beatmaps(beatmap_id=975667)
 
+        self.assertEqual(res[0].mode, osuapi.OsuMode.mania)
         self.assertTrue(res[0].diff_aim is None, 'diff_aim')
         self.assertTrue(res[0].diff_speed is None, 'diff_speed')
+        for k, v in dict(res[0]).items():
+            self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
+
+    def test_get_taiko_map(self):
+        res = self.api.get_beatmaps(beatmap_id=190047)
+
+        self.assertEqual(res[0].mode, osuapi.OsuMode.taiko)
+        for k, v in dict(res[0]).items():
+            self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
+
+    def test_get_ctb_map(self):
+        res = self.api.get_beatmaps(beatmap_id=385128)
+
+        self.assertEqual(res[0].mode, osuapi.OsuMode.ctb)
+        for k, v in dict(res[0]).items():
+            self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
 
 
 class OsuApiAsyncTest(unittest.TestCase):
@@ -150,5 +167,24 @@ class OsuApiAsyncTest(unittest.TestCase):
         # https://github.com/khazhyk/osuapi/issues/27
         res = await self.api.get_beatmaps(beatmap_id=975667)
 
+        self.assertEqual(res[0].mode, osuapi.OsuMode.mania)
         self.assertTrue(res[0].diff_aim is None, 'diff_aim')
         self.assertTrue(res[0].diff_speed is None, 'diff_speed')
+        for k, v in dict(res[0]).items():
+            self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
+
+    @async_test
+    async def test_get_taiko_map(self):
+        res = await self.api.get_beatmaps(beatmap_id=190047)
+
+        self.assertEqual(res[0].mode, osuapi.OsuMode.taiko)
+        for k, v in dict(res[0]).items():
+            self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
+
+    @async_test
+    async def test_get_ctb_map(self):
+        res = await self.api.get_beatmaps(beatmap_id=385128)
+
+        self.assertEqual(res[0].mode, osuapi.OsuMode.ctb)
+        for k, v in dict(res[0]).items():
+            self.assertFalse(isinstance(v, osuapi.dictmodel.Attribute), k)
