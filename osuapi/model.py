@@ -206,6 +206,12 @@ class BeatmapScore(Score):
     def __repr__(self):
         return "<{0.__module__}.BeatmapScore user_id={0.user_id} score_id={0.score_id} date={0.date}>".format(self)
 
+    def __hash__(self):
+        return hash(self.score_id)
+
+    def __eq__(self, other):
+        return self.score_id == other.score_id
+
 
 class UserEvent(AttributeModel):
     """Class representing individual user events.
