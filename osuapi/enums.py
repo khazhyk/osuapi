@@ -46,7 +46,7 @@ class OsuMod(Flags):
     NoMod = 0
     NoFail = 1, "NF"
     Easy = 2, "EZ"
-    NoVideo = 4
+    TouchDevice = 4, "TD"
     Hidden = 8, "HD"
     HardRock = 16, "HR"
     SuddenDeath = 32, "SD"
