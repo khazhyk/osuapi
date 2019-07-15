@@ -5,13 +5,6 @@ Connectors have to implement `process_request`.
 """
 from .errors import HTTPError
 
-
-def _bad_import_class(msg):
-    class _BadImportClass:
-        def __init__(self, *args, **kwargs):
-            raise NotImplementedError(msg)
-    return _BadImportClass
-
 try:
     import aiohttp
     import asyncio
@@ -71,7 +64,7 @@ try:
                     resp.close()
             raise HTTPError(resp.status, resp.reason, error_text)
 except ImportError:
-    AHConnector = _bad_import_class(
+    raise NotImplementedError(
         "You need to install `aiohttp` to use osuapi.AHConenctor")
 
 try:
@@ -117,5 +110,5 @@ try:
                     resp.close()
             raise HTTPError(resp.status_code, resp.reason, resp.text)
 except ImportError:
-    ReqConnector = _bad_import_class(
+    raise NotImplementedError(
         "You need to install `requests` to use osuapi.ReqConnector")
