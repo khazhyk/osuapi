@@ -151,6 +151,8 @@ class SoloScore(Score):
         Enabled modifiers
     date : datetime
         When the score was played.
+    replay_available : bool
+        If a replay is available.
 
     See Also
     ---------
@@ -161,6 +163,7 @@ class SoloScore(Score):
     enabled_mods = Attribute(PreProcessInt(OsuMod))
     score_id = Attribute(int)
     date = Attribute(DateConverter)
+    replay_available = Attribute(PreProcessInt(bool))
 
     def __repr__(self):
         return "<{0.__module__}.SoloScore user_id={0.user_id} beatmap_id={0.beatmap_id} date={0.date}>".format(self)
