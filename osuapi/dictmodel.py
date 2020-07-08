@@ -69,6 +69,14 @@ def JsonList(oftype):
     return _
 
 
+def CsvList(oftype):
+    """Generate a converter that accepts a comma separated list of :oftype."""
+    def _(lst):
+        return [oftype(entry) for entry in lst.split(",")]
+
+    return _
+
+
 def Nullable(oftype):
     """Generate a converter that may be None, or :oftype.
 

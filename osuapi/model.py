@@ -1,7 +1,7 @@
 """Different classes to parse dicts/lists returned from json into meaningful data objects."""
 
 from .enums import *
-from .dictmodel import AttributeModel, Attribute, JsonList, Nullable, PreProcessInt, DateConverter
+from .dictmodel import AttributeModel, Attribute, JsonList, CsvList, Nullable, PreProcessInt, DateConverter
 
 
 class Score(AttributeModel):
@@ -345,6 +345,8 @@ class Beatmap(AttributeModel):
         Last time the map was updated.
     artist : str
         Music metadata.
+    artist_unicode : str
+        Music metadata.
     beatmap_id : int
         Unique identifier for beatmap.
     beatmapset_id : int
@@ -379,6 +381,8 @@ class Beatmap(AttributeModel):
         Language of the music.
     title : str
         Title of the song.
+    title_unicode : str
+        Title of the song.
     total_length : int
         Total song length in seconds.
     version : str
@@ -405,10 +409,16 @@ class Beatmap(AttributeModel):
         Number of sliders
     count_spinner : int
         Number of spinners
+    storyboard : bool
+        If this beatmap has a storyboard
+    video : bool
+        If this beatmap has a video
     download_unavailable : bool
         If the download for this beatmap is unavailable (old map, etc.)
     audio_unavailable : bool
         If the audio for this beatmap is unavailable (DMCA takedown, etc.)
+    packs: Optional[list[str]]
+        List of beatmap packs containing this map.
 
     See Also
     ---------
@@ -419,6 +429,7 @@ class Beatmap(AttributeModel):
     submit_date = Attribute(DateConverter)
     last_update = Attribute(DateConverter)
     artist = Attribute(str)
+    artist_unicode = Attribute(str)
     beatmap_id = Attribute(int)
     beatmapset_id = Attribute(int)
     bpm = Attribute(float)
@@ -436,6 +447,7 @@ class Beatmap(AttributeModel):
     genre_id = Attribute(PreProcessInt(BeatmapGenre))
     language_id = Attribute(PreProcessInt(BeatmapLanguage))
     title = Attribute(str)
+    title_unicode = Attribute(str)
     total_length = Attribute(int)
     version = Attribute(str)
     file_md5 = Attribute(str)
@@ -449,8 +461,11 @@ class Beatmap(AttributeModel):
     count_slider = Attribute(Nullable(int))
     count_spinner = Attribute(Nullable(int))
     max_combo = Attribute(Nullable(int))
+    storyboard = Attribute(PreProcessInt(bool))
+    video = Attribute(PreProcessInt(bool))
     download_unavailable = Attribute(PreProcessInt(bool))
     audio_unavailable = Attribute(PreProcessInt(bool))
+    packs = Attribute(Nullable(CsvList(str)))
 
     def __repr__(self):
         return "<{0.__module__}.Beatmap title={0.title} creator={0.creator} id={0.beatmap_id}>".format(self)
