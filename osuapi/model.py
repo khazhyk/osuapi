@@ -329,6 +329,14 @@ class User(AttributeModel):
     def __str__(self):
         return self.username
 
+    @property
+    def url(self):
+        return "https://osu.ppy.sh/u/{0.user_id}".format(self)
+
+    @property
+    def profile_image(self):
+        return "https://s.ppy.sh/a/{0.user_id}".format(self)
+
 
 class Beatmap(AttributeModel):
     """Class representing a beatmap
@@ -477,6 +485,14 @@ class Beatmap(AttributeModel):
     @property
     def set_url(self):
         return "https://osu.ppy.sh/s/{0.beatmapset_id}".format(self)
+
+    @property
+    def cover_image(self):
+        return "https://assets.ppy.sh/beatmaps/{0.beatmapset_id}/covers/cover.jpg".format(self)
+
+    @property
+    def cover_thumbnail(self):
+        return "https://b.ppy.sh/thumb/{0.beatmapset_id}l.jpg".format(self)
 
 
 class MatchMetadata(AttributeModel):
