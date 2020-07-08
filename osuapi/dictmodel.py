@@ -46,7 +46,7 @@ class AttributeModel(object, metaclass=AttributeModelMeta):
             try:
                 attr = self.__attributemodel__[k]
             except KeyError:
-                warnings.warn("Unknown attribute {} in API response for type {}".format(k, type(self)), Warning)
+                warnings.warn("Unknown attribute {} (\"{}\") in API response for type {}".format(k, v, type(self)), Warning)
             else:
                 setattr(self, attr.field_name, attr.parse(v))
 
