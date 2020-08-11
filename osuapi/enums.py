@@ -72,6 +72,7 @@ class OsuMod(Flags):
     Key1 = 67108864, "1K"
     Key3 = 134217728, "3K"
     Key2 = 268435456, "2K"
+    ScoreV2 = 536870912, "ScoreV2"
 
     def __init__(self, value, shortname=""):
         Flags.__init__(self, value)
@@ -152,7 +153,7 @@ class BeatmapGenre(Enum):
 class BeatmapLanguage(Enum):
     """Enum represeting the language of a beatmap."""
     any = 0
-    other = 1
+    unspecified = 1
     english = 2
     japanese = 3
     chinese = 4
@@ -163,6 +164,9 @@ class BeatmapLanguage(Enum):
     swedish = 9
     spanish = 10
     italian = 11
+    russian = 12
+    polish = 13
+    other = 14
 
 
 class ScoringType(Enum):
