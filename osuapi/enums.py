@@ -73,6 +73,7 @@ class OsuMod(Flags):
     Key3 = 134217728, "3K"
     Key2 = 268435456, "2K"
     ScoreV2 = 536870912, "ScoreV2"
+    Mirror = 1073741824, "Mirror"
 
     def __init__(self, value, shortname=""):
         Flags.__init__(self, value)
