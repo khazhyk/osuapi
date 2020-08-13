@@ -149,6 +149,10 @@ class BeatmapGenre(Enum):
     novelty = 7
     hip_hop = 9
     electronic = 10
+    metal = 11
+    classical = 12
+    folk = 13
+    jazz = 14
 
 
 class BeatmapLanguage(Enum):
