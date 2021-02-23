@@ -104,6 +104,7 @@ class TeamScore(Score):
     """
     slot = Attribute(int)
     team = Attribute(int)
+    enabled_mods = Attribute(PreProcessInt(OsuMod))
     passed = Attribute(PreProcessInt(bool), name="pass")
 
     def __repr__(self):
