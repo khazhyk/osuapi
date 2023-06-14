@@ -34,8 +34,7 @@ try:
             if inspect.isawaitable(aiohttp_is_silly):
                 asyncio.ensure_future(aiohttp_is_silly)
 
-        @asyncio.coroutine
-        def process_request(self, endpoint, data, type_, retries=5):
+        async def process_request(self, endpoint, data, type_, retries=5):
             """Make and process the request.
 
             This can raise anything aiohttp.get() can raise, or
@@ -54,20 +53,20 @@ try:
             """
 
             while retries:
-                resp = yield from self.sess.get(endpoint, params=data)
+                resp = await self.sess.get(endpoint, params=data)
                 try:
                     if resp.status == 200:
-                        data = yield from resp.json()
+                        data = await resp.json()
                         return type_(data)
                     elif resp.status == 504:
                         # Retry on 504
                         retries -= 1
-                        yield from asyncio.sleep(1)
+                        await asyncio.sleep(1)
                     else:
                         break
                 finally:
                     if not retries or resp.status not in {200, 504}:
-                        error_text = yield from resp.text()
+                        error_text = await resp.text()
                     resp.close()
             raise HTTPError(resp.status, resp.reason, error_text)
 except ImportError:
